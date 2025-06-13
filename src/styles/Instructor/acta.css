@@ -1,0 +1,258 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@1,300&display=swap');
+
+:root {
+  --verde-principal: #01AF00;
+  --azul-oscuro: #00324C;
+  --beige: #f2f1dc;
+  --beige-claro: #FCFCE8;
+  --sombra-suave: 0 2px 5px rgba(0, 0, 0, 0.2);
+  --fuente: 'Work Sans', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--fuente);
+  background-color: var(--beige);
+  color: var(--azul-oscuro);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.pantalla {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 250px;
+  background-color: var(--beige);
+  box-shadow: var(--sombra-suave);
+  z-index: 10;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--azul-oscuro);
+  padding: 14px 28px;
+  height: 100px;
+  width: 100vw;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.logo-img {
+  height: 170px;
+  width: auto;
+  margin-top: -50px;
+  object-fit: contain;
+}
+
+.hamburguesa {
+  font-size: 32px;
+  background-color: var(--beige-claro);
+  border: none;
+  cursor: pointer;
+  color: var(--azul-oscuro);
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+  height: 60px;
+  width: 60px;
+  text-align: center;
+}
+
+.hamburguesa:hover {
+  background-color: #e8e6c5;
+}
+
+.menu {
+  position: absolute;
+  top: 50px;
+  left: 10px;
+  background-color: var(--beige-claro);
+  border: 1px solid var(--beige-claro);
+  box-shadow: var(--sombra-suave);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  border-radius: 4px;
+  overflow: hidden;
+  font-size: 1.25rem;
+}
+
+.menu button {
+  padding: 10px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--azul-oscuro);
+  transition: background 0.2s ease;
+  font-size: 1.25rem;
+}
+
+.menu button:hover {
+  background-color: rgba(0, 50, 76, 0.05);
+}
+
+.menu button i {
+  margin-right: 8px;
+}
+
+.contenido {
+  display: flex;
+  height: calc(100vh - 100px);
+  width: 100%;
+  overflow: hidden;
+}
+
+.panel-principal {
+  flex-grow: 1;
+  padding: 40px;
+  overflow-y: auto;
+  background-color: var(--beige-claro);
+  max-height: calc(100vh - 100px);
+  width: 100%;
+  position: relative;
+}
+
+button,
+input,
+textarea,
+select {
+  transition: all 0.2s ease-in-out;
+}
+
+.boton-verde {
+  background-color: var(--verde-principal);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+  font-size: 1.1rem;
+  min-width: 150px;
+  margin-bottom: 10px;
+}
+
+.boton-verde:hover {
+  background-color: #028a00;
+}
+
+.botones-acta {
+  display: flex;
+  gap: 24px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  padding: 20px;
+}
+.container {
+  background: white;
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #000;
+  padding-bottom: 10px;
+}
+.header .title {
+  text-align: center;
+  flex: 1;
+  font-size: 20px;
+  font-weight: bold;
+}
+h2 {
+  font-size: 18px;
+  background: #e0e0e0;
+  padding: 8px;
+  margin-top: 20px;
+  page-break-before: always;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  page-break-inside: avoid;
+}
+th, td {
+  border: 1px solid #444;
+  padding: 8px;
+  text-align: left;
+}
+tr, td {
+  page-break-inside: avoid;
+}
+
+input[type="text"], textarea {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+  padding: 4px;
+}
+textarea {
+  resize: vertical;
+}
+footer {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 30px;
+}
+
+/* style.css */
+@media print {
+  /* Hace que tu contenedor ocupe exactamente un A4 vertical */
+  #acta {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0;
+    padding: 5mm;         /* pequeño margen interno */
+    box-sizing: border-box;
+  }
+}
+
+@media print {
+  /* Antes de cada sección, fuerza salto de página */
+  h2 {
+    page-break-before: always;
+    margin-top: 0;
+  }
+
+  /* Evita partir tablas entre páginas */
+  table, tr, td, th {
+    page-break-inside: avoid;
+  }
+}
+
+.container table {
+  border: 1px solid #444;
+}
+
+h2 {
+  background: #e0e0e0;
+  padding: 8px;
+}

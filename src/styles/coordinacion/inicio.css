@@ -1,0 +1,233 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@1,300&display=swap');
+
+:root {
+  --verde-principal: #01AF00;
+  --azul-oscuro: #00324C;
+  --beige: white;
+  --beige-claro: white;
+  --sombra-suave: 0 2px 5px rgba(0, 0, 0, 0.2);
+  --fuente: 'Work Sans', sans-serif;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: var(--fuente);
+  background-color: white;
+  color: var(--azul-oscuro);
+}
+
+.pantalla {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+
+/* Encabezado superior */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--azul-oscuro);
+  padding: 14px 28px;
+  height: 100px;
+  width: 100vw;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.hamburguesa {
+  font-size: 32px;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  color: #00324C;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+  height: 60px;
+  width: 60px;
+  text-align: center;
+}
+
+.hamburguesa:hover {
+  background-color: #e8e6c5;
+}
+
+.menu {
+  position: absolute;
+  top: 50px;
+  left: 10px;
+  background-color: white;
+  border: 1px solid white;
+  box-shadow: var(--sombra-suave);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  border-radius: 4px;
+  overflow: hidden;
+  font-size: 1.25rem;
+  align-items: center;
+}
+
+.menu button {
+  padding: 10px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--azul-oscuro);
+  transition: background 0.2s ease;
+  font-size: 1.25rem;
+  align-items: center;
+}
+
+.menu button:hover {
+  background-color: rgba(0, 50, 76, 0.05);
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.logo-img {
+  width: 150px;
+  height: 150px;
+}
+
+/* Barra de navegación */
+.barra-navegacion {
+  display: flex;
+  justify-content: center;
+  gap: 55px;
+  background-color: white;
+  padding: 20px 0;
+  box-shadow: var(--sombra-suave);
+  border-bottom: 1.5px solid rgba(128, 128, 128, 0.15);
+  width: 100%;
+}
+
+/* Botones del menú superior */
+.btn-top {
+  background-color: var(--verde-principal);
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 6px;
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-top:hover {
+  background-color: #018d00;
+}
+
+/* Panel principal centrado - AGRANDADO */
+.panel-formulario {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  color: var(--azul-oscuro);
+  padding: 60px 80px;
+  width: 100%;
+  border-top: 2px solid var(--azul-oscuro);
+}
+
+.panel-formulario h2 {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.subtexto {
+  font-style: italic;
+  color: #555;
+  margin-bottom: 40px;
+  font-size: 1.1rem;
+}
+
+.formulario {
+  display: flex;
+  gap: 125px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 2rem;
+  position: relative;
+}
+
+.input-select {
+  position: relative;
+  width: 300px;
+  margin-top: 8px;
+}
+
+.input-select input {
+  width: 100%;
+  padding: 10px 12px;
+  padding-right: 32px;
+  font-size: 1.5rem;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  background-color: transparent;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.input-select input:focus {
+  border-bottom: 2px solid var(--verde-principal);
+}
+
+.flecha {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: white;
+  background-color: var(--verde-principal);
+  padding: 6px 6px;
+  border-radius: 4px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  box-sizing: border-box;
+}
+
+.input-select-con-boton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.boton-lupa {
+  background-color: white;
+  border: none;
+  color: var(--verde-principal);
+  padding: 6px 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.boton-lupa:hover {
+  background-color: white;
+}
