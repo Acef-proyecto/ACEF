@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FaSignOutAlt, FaBook, FaSearch, FaArrowLeft } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import "../../styles/coordinacion/resultados.css";
+import { useNavigate } from 'react-router-dom';
 
 const Resultados = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -57,15 +58,17 @@ const Resultados = () => {
     setAprendices(nuevos);
   };
 
+  const navigate = useNavigate();
+
   return (
     <div className="pantalla">
       <header className="header">
         <button className="hamburguesa" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
         {menuOpen && (
           <div className="menu">
-            <button><FaSignOutAlt style={{ marginRight: "8px" }} />Cerrar sesión</button>
+            <button onClick={() => navigate('/')}><FaSignOutAlt style={{ marginRight: "8px" }} />Cerrar sesión</button>
             <button><FaBook style={{ marginRight: "8px" }} />Manual</button>
-            <button><FaArrowLeft style={{ marginRight: "8px" }} />Volver</button>
+            <button onClick={() => navigate('/coordinacion/filtro')}><FaArrowLeft style={{ marginRight: "8px" }} />Volver</button>
           </div>
         )}
         <div className="logo">

@@ -5,7 +5,7 @@ import { FaSignOutAlt, FaBook } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import "../../styles/instructor/acta.css";
 import SubirActa from "../../component/Instructor/subir";
-
+import { useNavigate } from 'react-router-dom';
 
 function crearFilaAprendices(tbody, index) {
   const row = document.createElement('tr');
@@ -151,6 +151,8 @@ const Acta = () => {
     });
   };
 
+  const navigate = useNavigate();
+
   return (
     <div className="pantalla">
       <header className="header">
@@ -165,7 +167,7 @@ const Acta = () => {
 
         {menuOpen && (
           <div className="menu">
-            <button type="button"><FaSignOutAlt style={{ marginRight: 8 }} />Cerrar sesión</button>
+            <button type="button" onClick={() => navigate('/')}><FaSignOutAlt style={{ marginRight: 8 }} />Cerrar sesión</button>
             <button type="button"><FaBook style={{ marginRight: 8 }} />Manual</button>
           </div>
         )}
@@ -183,13 +185,11 @@ const Acta = () => {
             ref={actaRef}
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
-          <div>
-
+          <div className="contenedor-botones">
             <button
             type="button"
             className="boton-verde"
-            onClick={() => setModalAbierto(true)}
-          >
+            onClick={() => setModalAbierto(true)}>
             Subir acta
           </button>
 

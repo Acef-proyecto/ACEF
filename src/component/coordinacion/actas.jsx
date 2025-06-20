@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { FaSignOutAlt, FaBook,FaArrowLeft, FaSearch, FaClipboard } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import "../../styles/coordinacion/actas.css";
+import { useNavigate } from 'react-router-dom';
 
 const TablaActas = ({ actas }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="pantalla">
@@ -12,7 +14,7 @@ const TablaActas = ({ actas }) => {
         <button className="hamburguesa" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
         {menuOpen && (
           <div className="menu">
-            <button>
+            <button onClick={() => navigate('/')}>
               <FaSignOutAlt style={{ marginRight: "8px" }} />
               Cerrar sesión
             </button>
@@ -20,7 +22,7 @@ const TablaActas = ({ actas }) => {
               <FaBook style={{ marginRight: "8px" }} />
               Manual
             </button>
-            <button>
+            <button onClick={() => navigate('/coordinacion/inicio')}>
               <FaArrowLeft style={{ marginRight: "8px" }} />
               Volver
             </button>

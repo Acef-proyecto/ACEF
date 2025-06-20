@@ -132,6 +132,11 @@ select {
   transition: all 0.2s ease-in-out;
 }
 
+.contenedor-botones {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .boton-verde {
   background-color: var(--verde-principal);
   color: white;
@@ -144,6 +149,8 @@ select {
   font-size: 1.1rem;
   min-width: 150px;
   margin-bottom: 10px;
+  margin-right: 10px;
+  margin-top: 15px;
 }
 
 .boton-verde:hover {

@@ -22,7 +22,7 @@ const Filtros = () => {
 
         {menuOpen && (
           <nav className="menu" aria-label="Menú principal">
-            <button type="button" className="menu-button">
+            <button type="button" className="menu-button" onClick={() => navigate('/')}>
               <FaSignOutAlt style={{ marginRight: "8px" }} />
               Cerrar sesión
             </button>
@@ -30,7 +30,7 @@ const Filtros = () => {
               <FaBook style={{ marginRight: "8px" }} />
               Manual
             </button>
-            <button type="button" className="menu-button">
+            <button type="button" className="menu-button" onClick={() => navigate('/coordinacion/inicio')}>
               <FaArrowLeft style={{ marginRight: "8px" }} />
               Volver
             </button>

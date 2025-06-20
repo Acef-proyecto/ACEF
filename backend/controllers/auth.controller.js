@@ -1,15 +1,15 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const Usuario = require('../models/usuarioModel');
+const Usuario = require('../models/usuario.model');
 const nodemailer = require('nodemailer');
 const db = require('../config/db');
 require('dotenv').config();
 
 // Registro
 const registrar = async (req, res) => {
-  const { Nombre, Apellido, Correo, Contraseña } = req.body;
+  const { Nombre, Apellido, Correo, Contraseña, rol, contacto } = req.body;
 
-  if (!Nombre || !Apellido || !Correo || !Contraseña) {
+  if (!Nombre || !Apellido || !Correo || !Contraseña || !rol || !contacto) {
     return res.status(400).json({ mensaje: 'Todos los campos son obligatorios' });
   }
 
@@ -23,8 +23,21 @@ const registrar = async (req, res) => {
     try {
       const hashedPassword = await bcrypt.hash(Contraseña, 10);
 
-      Usuario.crear({ Nombre, Apellido, Correo, Password: hashedPassword }, (err, result) => {
-        if (err) return res.status(500).json({ mensaje: 'Error al registrar usuario' });
+      const nuevoUsuario = {
+        Nombre,
+        Apellido,
+        Correo,
+        Password: hashedPassword,
+        rol,
+        contacto
+        // firma: null // no se registra al inicio
+      };
+
+      Usuario.crear(nuevoUsuario, (err) => {
+        if (err) {
+          console.error('Error al insertar usuario:', err);
+          return res.status(500).json({ mensaje: 'Error al registrar usuario' });
+        }
         res.status(201).json({ mensaje: 'Registro exitoso' });
       });
     } catch (error) {
@@ -66,13 +79,16 @@ const login = (req, res) => {
       usuario: {
         id: usuario.id_usuario,
         nombre: usuario.nombre,
-        apellido: usuario.apellido
+        apellido: usuario.apellido,
+        rol: usuario.rol,
+        contacto: usuario.contacto,
+        firma: usuario.firma || null
       }
     });
   });
 };
 
-// Recuperar contraseña: enviar correo
+// Enviar correo para restablecer contraseña
 const forgotPassword = async (req, res) => {
   const { correo } = req.body;
 
@@ -117,7 +133,7 @@ const resetPassword = (req, res) => {
     bcrypt.hash(nuevaPassword, 10, (err, hash) => {
       if (err) return res.status(500).json({ error: 'Error al encriptar la contraseña' });
 
-      db.query('UPDATE usuario SET Password = ? WHERE correo = ?', [hash, correo], (error, result) => {
+      db.query('UPDATE usuario SET Password = ? WHERE correo = ?', [hash, correo], (error) => {
         if (error) return res.status(500).json({ error: 'Error al actualizar contraseña' });
 
         res.json({ message: 'Contraseña actualizada correctamente' });
@@ -128,7 +144,6 @@ const resetPassword = (req, res) => {
   }
 };
 
-// Exportar todas las funciones correctamente
 module.exports = {
   registrar,
   login,

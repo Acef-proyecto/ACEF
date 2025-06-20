@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { FaSignOutAlt, FaBook, FaArrowLeft, FaUser, FaEnvelope, FaPhone, FaUserTag } from "react-icons/fa";
-import logo from "../../assets/logo.png";
-import sena from "../../assets/senaLogo.webp";
+import logo from "../../assets/logo.png"
 import "../../styles/coordinacion/registro.css";
+import { useNavigate } from 'react-router-dom';
 
 const Registro = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -75,13 +75,15 @@ const Registro = () => {
     setErrors({});
   };
 
+  const navigate = useNavigate();
+
   return (
     <div className="pantalla">
       <header className="header">
         <button className="hamburguesa" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
         {menuOpen && (
           <div className="menu">
-            <button>
+            <button onClick={() => navigate('/')}>
               <FaSignOutAlt style={{ marginRight: "8px" }} />
               Cerrar sesión
             </button>
@@ -89,7 +91,7 @@ const Registro = () => {
               <FaBook style={{ marginRight: "8px" }} />
               Manual
             </button>
-            <button>
+            <button onClick={() => navigate('/coordinacion/inicio')}>
               <FaArrowLeft style={{ marginRight: "8px" }} />
               Volver
             </button>
@@ -97,9 +99,6 @@ const Registro = () => {
         )}
         <div className="logo">
           <img src={logo} alt="Logo ACEF" className="logo-img" />
-        </div>
-        <div className="sena">
-          <img src={sena} alt='Logo SENA' className="logo-sena"/>
         </div>
       </header>
 

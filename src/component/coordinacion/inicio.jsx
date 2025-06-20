@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaSignOutAlt, FaBook, FaSearch } from "react-icons/fa";
 import logo from "../../assets/logo.png";
-import sena from "../../assets/senaLogo.webp";
 import "../../styles/coordinacion/inicio.css";
 
 const Inicio = () => {
@@ -15,15 +14,12 @@ const Inicio = () => {
         <button className="hamburguesa" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
         {menuOpen && (
           <div className="menu">
-            <button><FaSignOutAlt style={{ marginRight: "8px" }} />Cerrar sesión</button>
+            <button onClick={() => navigate('/')}><FaSignOutAlt style={{ marginRight: "8px" }}/>Cerrar sesión</button>
             <button><FaBook style={{ marginRight: "8px" }} />Manual</button>
           </div>
         )}
         <div className="logo">
           <img src={logo} alt="Logo ACEF" className="logo-img" />
-        </div>
-        <div className="sena">
-          <img src={sena} alt='Logo SENA' className="logo-sena"/>
         </div>
       </header>
 

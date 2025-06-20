@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaSignOutAlt, FaBook, FaArrowLeft } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import "../../styles/coordinacion/alertas.css";
+import { useNavigate } from 'react-router-dom';
 
 const Alertas = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -16,6 +17,8 @@ const Alertas = () => {
     setAlertas(prev => [...prev, nuevaAlerta]);
   };
 
+  const navigate = useNavigate();
+
   return (
     <div className="pantalla">
       <header className="header">
@@ -23,7 +26,7 @@ const Alertas = () => {
 
         {menuOpen && (
           <div className="menu">
-            <button>
+            <button onClick={() => navigate('/')}>
               <FaSignOutAlt style={{ marginRight: "8px" }} />
               Cerrar sesión
             </button>
@@ -31,7 +34,7 @@ const Alertas = () => {
               <FaBook style={{ marginRight: "8px" }} />
               Manual
             </button>
-            <button>
+            <button onClick={() => navigate('/coordinacion/inicio')}>
               <FaArrowLeft style={{ marginRight: "8px" }} />
               Volver
             </button>
