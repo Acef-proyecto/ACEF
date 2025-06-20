@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaSignOutAlt, FaBook, FaSearch } from "react-icons/fa";
 import logo from "../../assets/logo.png";
+import sena from "../../assets/senaLogo.webp";
 import "../../styles/coordinacion/inicio.css";
 
 const Inicio = () => {
@@ -21,12 +22,16 @@ const Inicio = () => {
         <div className="logo">
           <img src={logo} alt="Logo ACEF" className="logo-img" />
         </div>
+        <div className="sena">
+          <img src={sena} alt='Logo SENA' className="logo-sena"/>
+        </div>
       </header>
 
       {/* Panel superior de navegación */}
       <div className="barra-navegacion">
         <button className="btn-top" onClick={() => navigate('/coordinacion/actas')}>Actas</button>
         <button className="btn-top" onClick={() => navigate('/coordinacion/alertas')}>Alertas</button>
+        <button className="btn-top" onClick={() => navigate('/coordinacion/registro')}>Crear Usuario</button>
       </div>
 
       {/* Panel principal centrado */}

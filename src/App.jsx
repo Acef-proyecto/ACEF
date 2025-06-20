@@ -6,6 +6,7 @@ import Filtro from './component/coordinacion/filtro.jsx';
 import Resultados from './component/coordinacion/resultados.jsx';
 import TablaActas from './component/coordinacion/actas.jsx';
 import Alertas from './component/coordinacion/alertas.jsx';
+import Registro from './component/coordinacion/registro.jsx';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <Route path="/coordinacion/resultados" element={<Resultados />} />
       <Route path="/coordinacion/actas" element={<TablaActas />} />
       <Route path="/coordinacion/alertas" element={<Alertas />} />
+      <Route path="/coordinacion/registro" element={<Registro />} /> 
     </Routes>
   );
 }
