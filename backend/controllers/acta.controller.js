@@ -6,7 +6,7 @@ const transporter = require('../config/mail'); // asegúrate de tener esto confi
 exports.subir = (req, res) => {
   const { anexos } = req.body;
 
-  if (!anexos || !anexos.startsWith('http')) {
+  if (!anexos || typeof anexos !== 'string') {
     return res.status(400).json({ mensaje: 'Debes proporcionar una URL válida para el archivo.' });
   }
 

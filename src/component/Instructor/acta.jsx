@@ -8,8 +8,7 @@ import SubirActa from "../../component/Instructor/subir";
 import CompartirCorreo from "../Instructor/compartir";
 import { useNavigate } from 'react-router-dom';
 
-// === Funciones auxiliares fuera del componente ===
-
+// === Funciones auxiliares ===
 function obtenerTrimestreYAnio() {
   const fechaActual = new Date();
   const mes = fechaActual.getMonth();
@@ -23,9 +22,7 @@ function actualizarTextoEvaluacion() {
   const { trimestre, anio } = obtenerTrimestreYAnio();
   const texto = `Los Instructores encargados de evaluar los resultados de aprendizaje durante el ${trimestre} Trimestre de ${anio}, son:`;
   const span = document.getElementById("textoEvaluacion");
-  if (span) {
-    span.textContent = texto;
-  }
+  if (span) span.textContent = texto;
 }
 
 function crearFilaAprendices(tbody, index) {
@@ -39,7 +36,6 @@ function crearFilaAprendices(tbody, index) {
     <td><input type="text"></td>
   `;
   tbody.appendChild(row);
-
   const inputs = row.querySelectorAll('input');
   inputs.forEach(input => {
     input.addEventListener('input', () => verificarUltimaFila(input, tbody.id));
@@ -56,7 +52,6 @@ function crearFilaEvaluacion(tbody) {
     <td><input type="text"/></td>
   `;
   tbody.appendChild(row);
-
   const inputs = row.querySelectorAll('input');
   inputs.forEach(input => {
     input.addEventListener('input', () => verificarUltimaFila(input, tbody.id));
@@ -70,7 +65,6 @@ function verificarUltimaFila(input, tablaId) {
   const ultimaFila = filas[filas.length - 1];
   const inputs = ultimaFila?.querySelectorAll('input') || [];
   const tieneDatos = Array.from(inputs).some(inp => inp.value.trim() !== '');
-
   if (ultimaFila && ultimaFila.contains(input) && tieneDatos) {
     if (tablaId === 'evaluacion') {
       crearFilaEvaluacion(tbody);
@@ -81,12 +75,12 @@ function verificarUltimaFila(input, tablaId) {
 }
 
 // === Componente principal ===
-
 const Acta = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [htmlContent, setHtmlContent] = useState("");
   const [modalAbierto, setModalAbierto] = useState(false);
   const [modalCompartirAbierto, setModalCompartirAbierto] = useState(false);
+  const [idActa, setIdActa] = useState(null); // ✅ para guardar acta_id
   const actaRef = useRef(null);
   const navigate = useNavigate();
 
@@ -131,14 +125,11 @@ const Acta = () => {
     }).then(canvas => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
-
       const margin = 2;
       const pdfPageWidth = pdf.internal.pageSize.getWidth();
       const pdfPageHeight = pdf.internal.pageSize.getHeight();
-
       const usableWidth = pdfPageWidth - margin * 2;
       const usableHeight = (canvas.height * usableWidth) / canvas.width;
-
       const totalPages = Math.ceil(usableHeight / pdfPageHeight);
       let position = 0;
 
@@ -196,8 +187,9 @@ const Acta = () => {
             ref={actaRef}
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
+
           <div className="contenedor-botones">
-             <button
+            <button
               type="button"
               className="boton-verde"
               onClick={() => setModalCompartirAbierto(true)}
@@ -226,12 +218,15 @@ const Acta = () => {
             <SubirActa
               actaRef={actaRef}
               onClose={() => setModalAbierto(false)}
+              setIdActa={setIdActa} // ✅ lo pasamos al hijo
             />
           )}
 
           {modalCompartirAbierto && (
             <CompartirCorreo
-              onClose={() => setModalCompartirAbierto(false)} />
+              actaId={idActa} // ✅ pasamos id de acta compartida
+              onClose={() => setModalCompartirAbierto(false)}
+            />
           )}
         </main>
       </div>
