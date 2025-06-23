@@ -1,46 +1,58 @@
-// fromProyecto/backend/services/alertService.js
+// backend/services/alertService.js
 
 const cron        = require('node-cron');
 const transporter = require('../config/mail');
-const db          = require('../config/db');
+const db          = require('../config/db');      // ← sin .promise()
 const { format }  = require('date-fns');
 
-// Obtener trimestres según fecha actual o días antes de terminar
+// 1) Obtener trimestres de hoy o con offset
 async function fetchTrimestresByOffset(daysOffset = null) {
-  const where = daysOffset === null
-    ? `DATE(fecha_inicio) = CURDATE() OR DATE(fecha_fin) = CURDATE()`
-    : `DATE(fecha_fin) = DATE_ADD(CURDATE(), INTERVAL ${daysOffset} DAY)`;
-  const [rows] = await db.query(`SELECT * FROM trimestre WHERE ${where}`);
+  if (daysOffset === null) {
+    const [rows] = await db.execute(`
+      SELECT id_trimestre, fecha_inicio, fecha_fin
+      FROM trimestre
+      WHERE DATE(fecha_inicio) = CURDATE()
+         OR DATE(fecha_fin)    = CURDATE()
+    `);
+    return rows;
+  }
+  const [rows] = await db.execute(`
+    SELECT id_trimestre, fecha_inicio, fecha_fin
+    FROM trimestre
+    WHERE DATE(fecha_fin) = DATE_ADD(CURDATE(), INTERVAL ? DAY)
+  `, [daysOffset]);
   return rows;
 }
 
-// Obtener sólo usuarios instructores activos
+// 2) Instructores activos
 async function fetchInstructores() {
-  const [rows] = await db.query(`
+  const [rows] = await db.execute(`
     SELECT id_usuario, nombre, apellido, correo
     FROM usuario
-    WHERE rol = 'instructor' AND estado = 'activo'
+    WHERE rol = 'instructor'
+      AND estado = 'activo'
   `);
   return rows;
 }
 
-// Obtener resultados de aprendizaje asociados a un usuario y trimestre
+// 3) Resultados de aprendizaje de un usuario en un trimestre
 async function fetchResultados(trimestreId, usuarioId) {
-  const [ras] = await db.query(`
+  const [rows] = await db.execute(`
     SELECT ra.id_r_a,
-           ra.nombre         AS nombre_ra,
+           ra.numeros_r_a      AS numero_ra,
            uc.evaluado
       FROM r_a ra
-      JOIN competencia c ON ra.competencia_id = c.id_competencia
+      JOIN competencia c
+        ON ra.competencia_id = c.id_competencia
       JOIN usuario_has_competencia uc
         ON uc.competencia_id = c.id_competencia
-       AND uc.usuario_id = ?
-     WHERE c.trimestre_id = ?
+       AND uc.usuario_id     = ?
+     WHERE c.trimestre_id   = ?
   `, [usuarioId, trimestreId]);
-  return ras;
+  return rows;
 }
 
-// Enviar correo usando transporter configurado
+// 4) Envío de correo
 async function sendMail(to, subject, text) {
   await transporter.sendMail({
     from: `"ACEF" <${process.env.EMAIL_USER}>`,
@@ -50,37 +62,33 @@ async function sendMail(to, subject, text) {
   });
 }
 
-// Procesar todas las alertas necesarias
+// 5) Lógica principal
 async function processAlerts() {
-  // Sólo instructores
   const instructores = await fetchInstructores();
 
-  // 1. Alertas por fecha de inicio o fin = hoy
+  // — alertas inicio/fin hoy
   const hoyTrims = await fetchTrimestresByOffset();
   for (const t of hoyTrims) {
-    const hoy = new Date().toISOString().slice(0, 10);
-    const esInicio = t.fecha_inicio.toISOString().slice(0, 10) === hoy;
-    const tipo = esInicio ? 'Inicio' : 'Fin';
+    const hoy     = format(new Date(), 'yyyy-MM-dd');
+    const isStart = format(t.fecha_inicio, 'yyyy-MM-dd') === hoy;
+    const tipo    = isStart ? 'Inicio' : 'Fin';
 
     for (const u of instructores) {
       const ras = await fetchResultados(t.id_trimestre, u.id_usuario);
-      if (ras.length === 0) continue;
+      if (!ras.length) continue;
 
       let body = `Hola ${u.nombre} ${u.apellido},\n\n`;
-      body += `${tipo} de trimestre el ${format(
-        esInicio ? t.fecha_inicio : t.fecha_fin,
+      body += `${tipo} de trimestre: ${format(
+        isStart ? t.fecha_inicio : t.fecha_fin,
         'dd/MM/yyyy'
-      )}.\n\n`;
-      body += `Resultados de aprendizaje:\n`;
-
+      )}.\n\nResultados de aprendizaje:\n`;
       ras.forEach(r => {
-        body += `• RA: ${r.nombre_ra} – ${
+        body += `• RA #${r.numero_ra} – ${
           r.evaluado ? 'Calificado ✔' : 'Pendiente ❌'
         }\n`;
       });
-
       if (ras.every(r => r.evaluado)) {
-        body += `\n✅ ¡Has completado la calificación de todos tus resultados de aprendizaje!`;
+        body += `\n✅ ¡Has completado la calificación de todos tus RAs!`;
       }
 
       await sendMail(
@@ -91,22 +99,20 @@ async function processAlerts() {
     }
   }
 
-  // 2. Alerta 7 días antes de fin de trimestre
+  // — alerta 7 días antes de fin
   const pre7 = await fetchTrimestresByOffset(7);
   for (const t of pre7) {
     for (const u of instructores) {
       const ras = await fetchResultados(t.id_trimestre, u.id_usuario);
-      if (ras.length === 0) continue;
+      if (!ras.length) continue;
 
       let body = `Hola ${u.nombre} ${u.apellido},\n\n`;
-      body += `⏳ Faltan 7 días para finalizar el trimestre el ${format(
+      body += `⏳ Faltan 7 días para fin de trimestre: ${format(
         t.fecha_fin,
         'dd/MM/yyyy'
-      )}.\n\n`;
-      body += `Resultados de aprendizaje:\n`;
-
+      )}.\n\nResultados de aprendizaje:\n`;
       ras.forEach(r => {
-        body += `• RA: ${r.nombre_ra} – ${
+        body += `• RA #${r.numero_ra} – ${
           r.evaluado ? 'Calificado ✔' : 'Pendiente ❌'
         }\n`;
       });
@@ -120,18 +126,14 @@ async function processAlerts() {
   }
 }
 
-// Ejecutar todos los días a las 08:00 AM hora Bogotá
+// Cron diario a las 08:00 AM Bogotá
 cron.schedule(
   '0 8 * * *',
   () => {
-    console.log(
-      '[AlertService] Iniciando comprobación de alertas –',
-      new Date().toISOString()
-    );
+    console.log('[AlertService] Ejecutando comprobación –', new Date());
     processAlerts().catch(err => console.error('[AlertService ERROR]', err));
   },
   { timezone: 'America/Bogota' }
 );
 
-// Exportar para pruebas manuales
 module.exports = { processAlerts };

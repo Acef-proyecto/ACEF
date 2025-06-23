@@ -30,7 +30,6 @@ const registrar = async (req, res) => {
         Password: hashedPassword,
         rol,
         contacto
-        // firma: null // no se registra al inicio
       };
 
       Usuario.crear(nuevoUsuario, (err) => {
@@ -98,7 +97,11 @@ const forgotPassword = async (req, res) => {
     }
 
     const user = results[0];
-    const token = jwt.sign({ id: user.id_usuario, correo: user.correo }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign(
+      { id: user.id_usuario, correo: user.correo },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
 
     const resetLink = `http://localhost:3000/reset-password/${token}`;
 
@@ -107,18 +110,46 @@ const forgotPassword = async (req, res) => {
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
-      }
+      },
     });
 
     await transporter.sendMail({
-      from: '"Soporte" <soporte@tuapp.com>',
+      from: '"Soporte SENA" <soporte@tuapp.com>',
       to: correo,
-      subject: "Restablecer contraseña",
-      html: `<p>Haz clic en este enlace para cambiar tu contraseña:</p><a href="${resetLink}">${resetLink}</a>`
+      subject: "🔐 Restablecer tu contraseña",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; background-color: #f4f4f4; padding: 20px; border-radius: 8px;">
+          <div style="text-align: center;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Logo_del_sena.jpg" alt="SENA" width="100" style="margin-bottom: 20px;" />
+          </div>
+          <h2 style="color: #1e5631;">Solicitud para restablecer tu contraseña</h2>
+          <p>Hola,</p>
+          <p>Recibimos una solicitud para restablecer tu contraseña. Si no fuiste tú, ignora este mensaje. Si quieres continuar, haz clic en el siguiente botón:</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${resetLink}" style="background-color: #1e5631; color: white; padding: 12px 20px; text-decoration: none; border-radius: 6px; font-weight: bold;">Restablecer Contraseña</a>
+          </div>
+          <p>O copia y pega el siguiente enlace en tu navegador:</p>
+          <p style="word-break: break-all;"><a href="${resetLink}">${resetLink}</a></p>
+          <p style="font-size: 0.9em; color: #555;">Este enlace expirará en 1 hora.</p>
+          <hr />
+          <p style="font-size: 0.8em; text-align: center; color: #888;">© SENA - Servicio Nacional de Aprendizaje</p>
+        </div>
+      `,
     });
 
     res.json({ message: 'Correo enviado con éxito' });
   });
+};
+
+// Verificar si el token es válido (opcional pero útil en React)
+const verificarTokenReset = (req, res) => {
+  const { token } = req.params;
+  try {
+    jwt.verify(token, process.env.JWT_SECRET);
+    res.status(200).json({ ok: true, message: 'Token válido' });
+  } catch (error) {
+    res.status(400).json({ ok: false, error: 'Token inválido o expirado' });
+  }
 };
 
 // Restablecer contraseña con token
@@ -148,5 +179,7 @@ module.exports = {
   registrar,
   login,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  verificarTokenReset
 };
+  
