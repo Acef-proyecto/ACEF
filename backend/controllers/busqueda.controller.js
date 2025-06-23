@@ -1,6 +1,6 @@
 const connection = require('../config/db');
 
-// 1️⃣ Obtener competencias según ficha y programa
+// 1️⃣ Obtener competencias según ficha y programa (actualizado)
 exports.getCompetencias = (req, res) => {
   const { ficha, programa } = req.query;
   if (!ficha || !programa) {
@@ -9,12 +9,10 @@ exports.getCompetencias = (req, res) => {
 
   const sql = `
     SELECT DISTINCT c.id_competencia, c.nombre
-    FROM competencia c
-    JOIN usuario_has_competencia uhc ON uhc.competencia_id = c.id_competencia
-    JOIN usuario u ON u.id_usuario = uhc.usuario_id AND u.rol = 'aprendiz'
-    JOIN usuario_has_ficha uf ON uf.usuario_id = u.id_usuario
-    JOIN ficha f ON f.id_ficha = uf.ficha_id
+    FROM ficha f
     JOIN programa p ON p.id_programa = f.id_programa
+    JOIN ficha_has_competencia fc ON fc.ficha_id = f.id_ficha
+    JOIN competencia c ON c.id_competencia = fc.competencia_id
     WHERE f.numero = ? AND p.nombre LIKE ?
   `;
 
@@ -82,3 +80,4 @@ exports.getAprendices = (req, res) => {
     }
   );
 };
+
