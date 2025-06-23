@@ -1,37 +1,43 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/api/auth/login'; // Ajusta según tu backend
+const API_URL = 'http://localhost:3000/api/auth/'; 
 
-// Inicia sesión y retorna el token
-export const login = async (credenciales) => {
-  const response = await axios.post(`${API_URL}/login`, credenciales);
-  if (response.data.token) {
-    localStorage.setItem('token', response.data.token); // Guarda el token
+// Registrar nuevo usuario
+export const registrarUsuario = async (datos) => {
+  try {
+    const response = await axios.post(`${API_URL}/register`, datos);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { mensaje: 'Error al registrar usuario' };
   }
-  return response.data;
 };
 
-// Cierra sesión limpiando el token
-export const logout = () => {
-  localStorage.removeItem('token');
+// Iniciar sesión
+export const loginUsuario = async (datos) => {
+  try {
+    const response = await axios.post(`${API_URL}/login`, datos);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { mensaje: 'Error al iniciar sesión' };
+  }
 };
 
-// Obtiene el token almacenado
-export const getToken = () => {
-  return localStorage.getItem('token');
+// Solicitar correo de recuperación de contraseña
+export const enviarCorreoRecuperacion = async (correo) => {
+  try {
+    const response = await axios.post(`${API_URL}/forgot-password`, { correo });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { mensaje: 'Error al enviar correo de recuperación' };
+  }
 };
 
-// Verifica si el usuario está autenticado
-export const isAuthenticated = () => {
-  return !!getToken();
-};
-
-// Envía el token en las cabeceras
-export const authHeader = () => {
-  const token = getToken();
-  if (token) {
-    return { Authorization: `Bearer ${token}` };
-  } else {
-    return {};
+// Restablecer contraseña con token
+export const restablecerContrasena = async (token, nuevaPassword) => {
+  try {
+    const response = await axios.post(`${API_URL}/reset-password/${token}`, { nuevaPassword });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { mensaje: 'Error al restablecer contraseña' };
   }
 };

@@ -2,20 +2,40 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/LoginForm.css';
 import logo from '../assets/logo.png';
+import { loginUsuario } from '../services/loginService';
 
 function LoginForm() {
-  const [role, setRole] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [correo, setCorreo] = useState('');
+  const [contrasena, setContrasena] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (role === 'instructor') {
-      navigate('/instructor/acta');
-    } else if (role === 'coordinador') {
-      navigate('/coordinacion/inicio');
+    try {
+      const response = await loginUsuario({
+        Correo: correo,
+        Contraseña: contrasena
+      });
+
+      // Guardar token y usuario en localStorage
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('usuario', JSON.stringify(response.usuario));
+
+      const rol = response.usuario.rol;
+
+      // Redirección según el rol
+      if (rol === 'instructor') {
+        navigate('/instructor/acta');
+      } else if (rol === 'coordinador') {
+        navigate('/coordinacion/inicio');
+      } else {
+        navigate('/'); // ruta por defecto o acceso denegado
+      }
+
+    } catch (err) {
+      setError(err.mensaje || 'Error al iniciar sesión');
     }
   };
 
@@ -33,30 +53,17 @@ function LoginForm() {
           </div>
 
           <div className="form-body">
-            <div className="input-group">
-              <label htmlFor="role" className="label">Rol</label>
-              <select
-                id="role"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="select"
-                required
-              >
-                <option value="" disabled>Seleccionar rol</option>
-                <option value="instructor">Instructor</option>
-                <option value="coordinador">Coordinador / Coordinación</option>
-              </select>
-            </div>
+            {error && <p className="error">{error}</p>}
 
             <div className="input-group">
-              <label htmlFor="usuario" className="label">Usuario</label>
+              <label htmlFor="correo" className="label">Correo</label>
               <input
-                type="text"
-                id="usuario"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                type="email"
+                id="correo"
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
                 className="input"
-                autoComplete="username"
+                autoComplete="email"
                 required
               />
             </div>
@@ -66,8 +73,8 @@ function LoginForm() {
               <input
                 type="password"
                 id="contrasena"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={contrasena}
+                onChange={(e) => setContrasena(e.target.value)}
                 className="input"
                 autoComplete="current-password"
                 required
