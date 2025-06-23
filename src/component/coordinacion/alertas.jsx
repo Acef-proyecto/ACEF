@@ -3,21 +3,45 @@ import { FaSignOutAlt, FaBook, FaArrowLeft } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import "../../styles/coordinacion/alertas.css";
 import { useNavigate } from 'react-router-dom';
+import { enviarAlertaTrimestre } from '../../services/trimestreService';
 
 const Alertas = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [alertas, setAlertas] = useState([]);
 
-  const handleCrearAlerta = () => {
-    const nuevaAlerta = {
-      mensaje: "Nueva alerta generada.",
-      instructor: "Juan Pérez",
-      fecha: new Date().toLocaleDateString('es-CO') // Ej: 11/06/2025
-    };
-    setAlertas(prev => [...prev, nuevaAlerta]);
-  };
+  // const [mensaje, setMensaje] = useState('');
+  // const [instructor, setInstructor] = useState('');
+  const [inicioTrimestre, setInicioTrimestre] = useState('');
+  const [finTrimestre, setFinTrimestre] = useState('');
 
   const navigate = useNavigate();
+
+  const handleEnviarAlerta = async () => {
+    // if (!mensaje.trim() || !instructor.trim() || !inicioTrimestre || !finTrimestre) {
+    if (!inicioTrimestre || !finTrimestre) {
+      alert("Por favor completa todos los campos.");
+      return;
+    }
+
+    const alerta = {
+      // mensaje,
+      // instructor,
+      inicioTrimestre,
+      finTrimestre
+    };
+
+    try {
+      const res = await enviarAlertaTrimestre(alerta);
+      alert("✅ Alerta enviada correctamente.");
+      console.log("Respuesta:", res);
+
+      // setMensaje('');
+      // setInstructor('');
+      setInicioTrimestre('');
+      setFinTrimestre('');
+    } catch (error) {
+      alert("❌ Error al enviar la alerta.");
+    }
+  };
 
   return (
     <div className="pantalla">
@@ -46,56 +70,56 @@ const Alertas = () => {
         </div>
       </header>
 
-      <div className="contenido">
-        <main className="alertas-main">
-          <div className="filtros">
-            <label>
-              Inicio Trimestre
-              <input type="date" />
-            </label>
-            <label>
-              Fin Trimestre
-              <input type="date" />
-            </label>
-            <button className="crear-alerta" onClick={handleCrearAlerta}>Crear alertas</button>
+      <div className="contenido alertas-formulario">
+        <div className="alerta-container">
+
+          {/* Título */}
+          <div className="alerta-header">
+            <div className="alerta-titulo">Alerta</div>
+            <div className="instructor-titulo">Instructor</div>
           </div>
 
-          <table className="tabla-alertas">
-            <thead>
-              <tr>
-                <th style={{ width: "500px" }}>Mensaje</th>
-                <th style={{ width: "450px" }}>Instructor</th>
-                <th style={{ width: "185px" }}>Fecha</th>
-              </tr>
-            </thead>
-            <tbody>
-              {alertas.length > 0 ? (
-                <>
-                  {alertas.map((alerta, idx) => (
-                    <tr key={idx}>
-                      <td>{alerta.mensaje}</td>
-                      <td>{alerta.instructor}</td>
-                      <td>{alerta.fecha}</td>
-                    </tr>
-                  ))}
-                  {[...Array(8 - alertas.length)].map((_, index) => (
-                    <tr key={`empty-${index}`}>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </tr>
-                  ))}
-                </>
-              ) : (
-                <tr>
-                  <td colSpan="3" style={{ textAlign: "center" }}>
-                    No hay alertas registradas.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </main>
+          {/* Área principal */}
+          <div className="alerta-body">
+            <textarea
+              placeholder="Cuerpo de la alerta"
+              // value={mensaje}
+              onChange={(e) => setMensaje(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Correo del instructor"
+              //value={instructor}
+              onChange={(e) => setInstructor(e.target.value)}
+            /> 
+          </div>
+
+          {/* Fechas y botón */}
+          <div className="alerta-botones-horizontal">
+            <label className="trimestre-label">
+              Inicio Trimestre
+              <input
+                type="date"
+                value={inicioTrimestre}
+                onChange={(e) => setInicioTrimestre(e.target.value)}
+              />
+            </label>
+
+            <label className="trimestre-label">
+              Fin Trimestre
+              <input
+                type="date"
+                value={finTrimestre}
+                onChange={(e) => setFinTrimestre(e.target.value)}
+              />
+            </label>
+
+            <button className="enviar-btn" onClick={handleEnviarAlerta}>
+              Enviar Alerta
+            </button>
+          </div>
+
+        </div>
       </div>
     </div>
   );
