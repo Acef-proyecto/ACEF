@@ -2,6 +2,8 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const db = require("../config/db");
+const actaController = require("../controllers/acta.controller"); // ✅ importar controlador
+const authMiddleware = require("../middleware/auth.middleware"); // ✅ importar middleware si lo usas
 
 const router = express.Router();
 
@@ -41,26 +43,9 @@ router.post("/subir", upload.single("file"), (req, res) => {
 });
 
 // 📌 Guardar la URL del archivo en la base de datos
-router.post("/guardar", (req, res) => {
-  const { anexos } = req.body;
+router.post("/guardar", actaController.subir);
 
-  if (!anexos) {
-    return res.status(400).json({ error: "Falta el campo 'anexos'." });
-  }
-
-  const sql = "INSERT INTO acta (anexos) VALUES (?)";
-  db.query(sql, [anexos], (err, result) => {
-    if (err) {
-      console.error("❌ Error al guardar en la base de datos:", err);
-      return res.status(500).json({ error: "Error en base de datos" });
-    }
-
-    console.log("✅ Acta guardada con ID:", result.insertId);
-    return res.status(200).json({
-      mensaje: "Acta registrada correctamente",
-      id: result.insertId,
-    });
-  });
-});
+// ✅ Nueva ruta para compartir acta con otro instructor
+router.post("/compartir", authMiddleware, actaController.compartirActa);
 
 module.exports = router;
