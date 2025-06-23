@@ -42,7 +42,7 @@ Asegúrate de tener instalado:
 ### 📥 Clonar el Repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/acef.git
+git clone https://github.com/Acef-proyecto/acef.git
 cd acef
 npm install
 ```
