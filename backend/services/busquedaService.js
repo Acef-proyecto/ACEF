@@ -1,9 +1,8 @@
-const express = require('express');
-const router = express.Router();
+// backend/services/busquedaService.js
 const connection = require('../config/db');
 
-// Buscar por ficha específica o por programa
-router.get('/buscar', (req, res) => {
+// Buscar fichas y programas
+exports.buscarFichaPrograma = (req, res) => {
   const { ficha, programa } = req.query;
 
   let query = `
@@ -28,12 +27,10 @@ router.get('/buscar', (req, res) => {
 
   connection.query(query, params, (err, results) => {
     if (err) {
-      console.error('Error en la consulta:', err);
+      console.error('Error en la consulta de fichas/programas:', err);
       return res.status(500).json({ error: 'Error en la consulta' });
     }
 
-    res.json(results); // devolvemos aunque sea vacío, sin 404
+    res.json(results);
   });
-});
-
-module.exports = router;
+};

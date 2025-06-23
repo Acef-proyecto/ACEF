@@ -24,7 +24,6 @@ if (!fs.existsSync(firmaDir)) fs.mkdirSync(firmaDir, { recursive: true });
 const authRoutes       = require("./routes/auth.routes");
 const actaRoutes       = require("./routes/acta.routes");
 const busquedaRoutes   = require("./routes/busqueda.routes");
-const evaluacionRoutes = require("./routes/evaluacion.routes");
 const firmaRoutes      = require("./routes/firma.routes");
 const usuarioRoutes    = require("./routes/usuario.routes");
 const alertaRoutes = require('./routes/alerta.routes');
@@ -34,8 +33,7 @@ const trimestreRoutes = require('./routes/trimestre.routes');
 // ── Montar rutas
 app.use("/api/auth",    authRoutes);
 app.use("/api/acta",    actaRoutes);
-app.use("/api",         busquedaRoutes);
-app.use("/api",         evaluacionRoutes);
+app.use("/api/busqueda",  busquedaRoutes);
 app.use("/api/firma",   firmaRoutes);
 app.use("/api/usuario", usuarioRoutes);
 app.use('/api/alertas', alertaRoutes);
