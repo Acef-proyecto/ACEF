@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// 📌 Ruta base de prueba para evitar error de path-to-regexp
+// 📌 Ruta base de prueba
 router.get("/", (req, res) => {
   res.json({ mensaje: "Rutas de actas funcionando correctamente." });
 });
@@ -45,7 +45,10 @@ router.post("/subir", upload.single("file"), (req, res) => {
 // 📌 Guardar la URL del archivo en la base de datos
 router.post("/guardar", actaController.subir);
 
-// ✅ Nueva ruta para compartir acta con otro instructor
+// 📌 Compartir acta con otro instructor
 router.post("/compartir", authMiddleware, actaController.compartirActa);
+
+// 📌 Nueva ruta para obtener actas compartidas al usuario autenticado
+router.get("/compartidas", authMiddleware, actaController.obtenerActasCompartidas);
 
 module.exports = router;
