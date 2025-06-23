@@ -5,6 +5,7 @@ import { FaSignOutAlt, FaBook } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import "../../styles/instructor/acta.css";
 import SubirActa from "../../component/Instructor/subir";
+import CompartirCorreo from "../Instructor/compartir";
 import { useNavigate } from 'react-router-dom';
 
 // === Funciones auxiliares fuera del componente ===
@@ -85,6 +86,7 @@ const Acta = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [htmlContent, setHtmlContent] = useState("");
   const [modalAbierto, setModalAbierto] = useState(false);
+  const [modalCompartirAbierto, setModalCompartirAbierto] = useState(false);
   const actaRef = useRef(null);
   const navigate = useNavigate();
 
@@ -195,6 +197,14 @@ const Acta = () => {
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
           <div className="contenedor-botones">
+             <button
+              type="button"
+              className="boton-verde"
+              onClick={() => setModalCompartirAbierto(true)}
+            >
+              Compartir
+            </button>
+
             <button
               type="button"
               className="boton-verde"
@@ -217,6 +227,11 @@ const Acta = () => {
               actaRef={actaRef}
               onClose={() => setModalAbierto(false)}
             />
+          )}
+
+          {modalCompartirAbierto && (
+            <CompartirCorreo
+              onClose={() => setModalCompartirAbierto(false)} />
           )}
         </main>
       </div>
