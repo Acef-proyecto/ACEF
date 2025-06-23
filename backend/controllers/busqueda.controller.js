@@ -1,4 +1,3 @@
-// backend/controllers/busqueda.controller.js
 const connection = require('../config/db');
 
 // 1️⃣ Obtener competencias según ficha y programa
@@ -11,18 +10,14 @@ exports.getCompetencias = (req, res) => {
   const sql = `
     SELECT DISTINCT c.id_competencia, c.nombre
     FROM competencia c
-    JOIN aprendiz_has_competencia ahc 
-      ON ahc.competencia_id = c.id_competencia
-    JOIN aprendiz a 
-      ON a.id_aprendiz = ahc.aprendiz_id
-    JOIN ficha f 
-      ON f.id_ficha = a.ficha_id
-    JOIN programa p 
-      ON p.id_programa = f.id_programa
-    WHERE f.numero = ? 
-      AND p.nombre LIKE ?
+    JOIN usuario_has_competencia uhc ON uhc.competencia_id = c.id_competencia
+    JOIN usuario u ON u.id_usuario = uhc.usuario_id AND u.rol = 'aprendiz'
+    JOIN usuario_has_ficha uf ON uf.usuario_id = u.id_usuario
+    JOIN ficha f ON f.id_ficha = uf.ficha_id
+    JOIN programa p ON p.id_programa = f.id_programa
+    WHERE f.numero = ? AND p.nombre LIKE ?
   `;
-  
+
   connection.query(sql, [ficha, `%${programa}%`], (err, rows) => {
     if (err) {
       console.error('Error al cargar competencias:', err);
@@ -53,7 +48,7 @@ exports.getResultados = (req, res) => {
   });
 };
 
-// 3️⃣ Obtener aprendices según todos los filtros
+// 3️⃣ Obtener aprendices filtrados y su estado de evaluación por RA
 exports.getAprendices = (req, res) => {
   const { ficha, programa, competenciaId, resultadoId } = req.query;
   if (!ficha || !programa || !competenciaId || !resultadoId) {
@@ -61,24 +56,23 @@ exports.getAprendices = (req, res) => {
   }
 
   const sql = `
-    SELECT a.id_aprendiz, a.nombre,
-           IF(ahc.evaluado IS NULL, 0, ahc.evaluado) AS evaluado
-    FROM aprendiz a
-    JOIN ficha f 
-      ON a.ficha_id = f.id_ficha
-    JOIN programa p 
-      ON p.id_programa = f.id_programa
-    LEFT JOIN aprendiz_has_competencia ahc
-      ON ahc.aprendiz_id = a.id_aprendiz
-     AND ahc.competencia_id = ?
-     AND ahc.resultado_id = ?
-    WHERE f.numero = ? 
+    SELECT u.id_usuario AS id_aprendiz, CONCAT(u.nombre, ' ', u.apellido) AS nombre,
+           IF(uhra.evaluado IS NULL, 0, uhra.evaluado) AS evaluado
+    FROM usuario u
+    JOIN usuario_has_ficha uf ON u.id_usuario = uf.usuario_id
+    JOIN ficha f ON f.id_ficha = uf.ficha_id
+    JOIN programa p ON p.id_programa = f.id_programa
+    LEFT JOIN usuario_has_r_a uhra
+      ON uhra.usuario_id = u.id_usuario
+     AND uhra.r_a_id = ?
+    WHERE f.numero = ?
       AND p.nombre LIKE ?
+      AND u.rol = 'aprendiz'
   `;
 
   connection.query(
     sql,
-    [competenciaId, resultadoId, ficha, `%${programa}%`],
+    [resultadoId, ficha, `%${programa}%`],
     (err, rows) => {
       if (err) {
         console.error('Error al cargar aprendices:', err);
