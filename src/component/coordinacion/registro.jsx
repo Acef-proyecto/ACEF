@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { FaSignOutAlt, FaBook, FaArrowLeft, FaUser, FaEnvelope, FaPhone, FaUserTag } from "react-icons/fa";
-import logo from "../../assets/logo.png"
+import { FaSignOutAlt, FaBook, FaArrowLeft, FaUser, FaEnvelope, FaPhone, FaUserTag, FaLock } from "react-icons/fa";
+import logo from "../../assets/logo.png";
 import "../../styles/coordinacion/registro.css";
 import { useNavigate } from 'react-router-dom';
+import { registrarUsuario } from '../../services/registroService';
 
 const Registro = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -13,9 +14,11 @@ const Registro = () => {
     apellido: '',
     segundoApellido: '',
     numero: '',
-    correo: ''
+    correo: '',
+    contraseña: ''
   });
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
   const roles = [
     { value: '', label: 'Seleccionar rol' },
@@ -29,8 +32,7 @@ const Registro = () => {
       ...prev,
       [name]: value
     }));
-    
-    // Limpiar error si existe
+
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -41,24 +43,39 @@ const Registro = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.rol) newErrors.rol = 'Debe seleccionar un rol';
     if (!formData.nombre.trim()) newErrors.nombre = 'El nombre es requerido';
     if (!formData.apellido.trim()) newErrors.apellido = 'El apellido es requerido';
     if (!formData.numero.trim()) newErrors.numero = 'El número es requerido';
-    else if (!/^\d{10}$/.test(formData.numero)) newErrors.numero = 'El número debe tener 10 dígitos';
+    else if (!/^\d{10}$/.test(formData.numero)) newErrors.numero = 'Debe tener 10 dígitos';
     if (!formData.correo.trim()) newErrors.correo = 'El correo es requerido';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.correo)) newErrors.correo = 'Formato de correo inválido';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.correo)) newErrors.correo = 'Formato inválido';
+    if (!formData.contraseña.trim()) newErrors.contraseña = 'La contraseña es requerida';
+    else if (formData.contraseña.length < 6) newErrors.contraseña = 'Debe tener mínimo 6 caracteres';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (validateForm()) {
-      console.log('Datos del formulario:', formData);
-      alert('Usuario registrado exitosamente');
-      // Aquí iría la lógica para enviar los datos al backend
+      try {
+        const payload = {
+          nombre: `${formData.nombre} ${formData.segundoNombre}`.trim(),
+          apellido: `${formData.apellido} ${formData.segundoApellido}`.trim(),
+          correo: formData.correo,
+          contraseña: formData.contraseña,
+          rol: formData.rol,
+          contacto: formData.numero
+        };
+
+        const respuesta = await registrarUsuario(payload);
+        alert(respuesta.mensaje || 'Usuario registrado exitosamente');
+        handleCancel();
+      } catch (error) {
+        alert(error.message || 'Error al registrar el usuario');
+      }
     }
   };
 
@@ -70,12 +87,11 @@ const Registro = () => {
       apellido: '',
       segundoApellido: '',
       numero: '',
-      correo: ''
+      correo: '',
+      contraseña: ''
     });
     setErrors({});
   };
-
-  const navigate = useNavigate();
 
   return (
     <div className="pantalla">
@@ -110,7 +126,7 @@ const Registro = () => {
           </div>
 
           <div className="registro-form">
-            {/* Selección de Rol */}
+            {/* Rol */}
             <div className="form-group">
               <label htmlFor="rol">
                 <FaUserTag className="input-icon" />
@@ -124,9 +140,7 @@ const Registro = () => {
                 className={`form-input ${errors.rol ? 'error' : ''}`}
               >
                 {roles.map(role => (
-                  <option key={role.value} value={role.value}>
-                    {role.label}
-                  </option>
+                  <option key={role.value} value={role.value}>{role.label}</option>
                 ))}
               </select>
               {errors.rol && <span className="error-message">{errors.rol}</span>}
@@ -146,7 +160,6 @@ const Registro = () => {
                   value={formData.nombre}
                   onChange={handleInputChange}
                   className={`form-input ${errors.nombre ? 'error' : ''}`}
-                  placeholder="Ingrese su primer nombre"
                 />
                 {errors.nombre && <span className="error-message">{errors.nombre}</span>}
               </div>
@@ -163,7 +176,6 @@ const Registro = () => {
                   value={formData.segundoNombre}
                   onChange={handleInputChange}
                   className="form-input"
-                  placeholder="Ingrese su segundo nombre"
                 />
               </div>
             </div>
@@ -182,7 +194,6 @@ const Registro = () => {
                   value={formData.apellido}
                   onChange={handleInputChange}
                   className={`form-input ${errors.apellido ? 'error' : ''}`}
-                  placeholder="Ingrese su primer apellido"
                 />
                 {errors.apellido && <span className="error-message">{errors.apellido}</span>}
               </div>
@@ -199,12 +210,11 @@ const Registro = () => {
                   value={formData.segundoApellido}
                   onChange={handleInputChange}
                   className="form-input"
-                  placeholder="Ingrese su segundo apellido"
                 />
               </div>
             </div>
 
-            {/* Número y Correo */}
+            {/* Teléfono y correo */}
             <div className="form-row">
               <div className="form-group">
                 <label htmlFor="numero">
@@ -218,7 +228,6 @@ const Registro = () => {
                   value={formData.numero}
                   onChange={handleInputChange}
                   className={`form-input ${errors.numero ? 'error' : ''}`}
-                  placeholder="3001234567"
                   maxLength="10"
                 />
                 {errors.numero && <span className="error-message">{errors.numero}</span>}
@@ -236,12 +245,29 @@ const Registro = () => {
                   value={formData.correo}
                   onChange={handleInputChange}
                   className={`form-input ${errors.correo ? 'error' : ''}`}
-                  placeholder="usuario@ejemplo.com"
                 />
                 {errors.correo && <span className="error-message">{errors.correo}</span>}
               </div>
             </div>
 
+            {/* Contraseña */}
+            <div className="form-group">
+              <label htmlFor="contraseña">
+                <FaLock className="input-icon" />
+                Contraseña *
+              </label>
+              <input
+                type="password"
+                id="contraseña"
+                name="contraseña"
+                value={formData.contraseña}
+                onChange={handleInputChange}
+                className={`form-input ${errors.contraseña ? 'error' : ''}`}
+              />
+              {errors.contraseña && <span className="error-message">{errors.contraseña}</span>}
+            </div>
+
+            {/* Botones */}
             <div className="form-actions">
               <button type="button" className="btn-secondary" onClick={handleCancel}>
                 Limpiar

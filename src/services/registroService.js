@@ -1,50 +1,24 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/api/auth/register';
+const API_BASE_URL = 'http://localhost:3000/api/auth'; // Asegúrate de que el puerto coincida con tu backend
 
-// 🔐 Registrar usuario (con nombre, apellido, correo, contraseña y rol)
-export const register = async ({ nombre, apellido, correo, contraseña, rol }) => {
-  const response = await axios.post(`${API_URL}/register`, {
-    nombre,
-    apellido,
-    correo,
-    contraseña,
-    rol,
-  });
-  return response.data;
-};
-
-// 🔑 Iniciar sesión y guardar el token
-export const login = async ({ correo, contraseña }) => {
-  const response = await axios.post(`${API_URL}/login`, {
-    correo,
-    contraseña,
-  });
-
-  if (response.data.token) {
-    localStorage.setItem('token', response.data.token);
+// 🔐 Registrar nuevo usuario
+export const registrarUsuario = async ({ nombre, apellido, correo, contraseña, rol, contacto }) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/register`, {
+      Nombre: nombre,
+      Apellido: apellido,
+      Correo: correo,
+      Contraseña: contraseña,
+      rol,
+      contacto
+    });
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.data && error.response.data.mensaje) {
+      throw new Error(error.response.data.mensaje);
+    } else {
+      throw new Error('Error al registrar usuario');
+    }
   }
-
-  return response.data;
-};
-
-// 🚪 Cerrar sesión eliminando el token
-export const logout = () => {
-  localStorage.removeItem('token');
-};
-
-// 📦 Obtener el token guardado
-export const getToken = () => {
-  return localStorage.getItem('token');
-};
-
-// ✅ Verificar si el usuario está autenticado
-export const isAuthenticated = () => {
-  return !!getToken();
-};
-
-// 🛡️ Cabecera de autenticación
-export const authHeader = () => {
-  const token = getToken();
-  return token ? { Authorization: `Bearer ${token}` } : {};
 };
