@@ -46,7 +46,7 @@ ACEF surge como solución a estos problemas, proporcionando una plataforma centr
 ## Instalación
 1. Clonar el repositorio:
    ```bash
-   git clone https://github.com/tu-usuario/acef.git
+   git clone https://github.com/Acef-proyecto/acef.git
    cd acef
    ```
 2. Instalar dependencias de backend y frontend:
