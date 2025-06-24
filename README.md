@@ -118,5 +118,5 @@ Para dudas o mejoras, contacta a:
 - Correo: leslyemarcelab@gmail.com 
 - GitHub: [samuelt14](https://github.com/samuelt14)
 - GitHub: [Lisseth77](https://github.com/Lisseth77)
-- GitHub: [samuelt14](https://github.com/SantiagoR29)
+- GitHub: [SantiagoR29](https://github.com/SantiagoR29)
 - GitHub: [Lisseth77](https://github.com/MarceB2006)
