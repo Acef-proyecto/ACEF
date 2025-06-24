@@ -46,13 +46,20 @@ const Inicio = () => {
   }, [programa]);
 
   const handleBuscar = async () => {
-    try {
-      const resultados = await buscarFichaPrograma(ficha, programa);
-      navigate('/coordinacion/filtro', { state: { resultados } });
-    } catch (error) {
-      alert(error.mensaje || 'No se encontraron resultados');
+  try {
+    const resultados = await buscarFichaPrograma(ficha, programa);
+    if (resultados.length > 0) {
+      navigate('/coordinacion/filtro', {
+        state: { ficha, programa }
+      });
+    } else {
+      alert("No se encontraron resultados con esos filtros.");
     }
-  };
+  } catch (error) {
+    alert(error.mensaje || 'No se encontraron resultados');
+  }
+};
+
 
   return (
     <div className="pantalla">
@@ -102,12 +109,11 @@ const Inicio = () => {
                   ))}
                 </select>
               </div>
+              <button className="boton-lupa" onClick={handleBuscar}>
+                <FaSearch />
+              </button>
             </div>
           </div>
-
-          <button className="boton-lupa" onClick={handleBuscar}>
-            <FaSearch />
-          </button>
         </div>
       </div>
     </div>

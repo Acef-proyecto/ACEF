@@ -1,39 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const connection = require('../config/db');
+const controller = require('../controllers/busqueda.controller');
 
-// Buscar por ficha específica o por programa
-router.get('/buscar', (req, res) => {
-  const { ficha, programa } = req.query;
-
-  let query = `
-    SELECT 
-      f.numero AS ficha,
-      p.nombre AS programa
-    FROM ficha f
-    INNER JOIN programa p ON f.id_programa = p.id_programa
-    WHERE 1=1
-  `;
-  const params = [];
-
-  if (ficha) {
-    query += ' AND f.numero = ?';
-    params.push(ficha);
-  }
-
-  if (programa) {
-    query += ' AND p.nombre LIKE ?';
-    params.push(`%${programa}%`);
-  }
-
-  connection.query(query, params, (err, results) => {
-    if (err) {
-      console.error('Error en la consulta:', err);
-      return res.status(500).json({ error: 'Error en la consulta' });
-    }
-
-    res.json(results); // devolvemos aunque sea vacío, sin 404
-  });
-});
+router.get('/buscar', controller.buscarFichaPrograma);
+router.get('/competencias', controller.getCompetencias);
+router.get('/resultados', controller.getResultados);
+router.get('/aprendices', controller.getAprendices);
 
 module.exports = router;

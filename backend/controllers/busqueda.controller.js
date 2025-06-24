@@ -1,6 +1,40 @@
 const connection = require('../config/db');
 
-// 1️⃣ Obtener competencias según ficha y programa (actualizado)
+// 1️⃣ Buscar ficha y programa (nueva función para /buscar)
+exports.buscarFichaPrograma = (req, res) => {
+  const { ficha, programa } = req.query;
+
+  let query = `
+    SELECT 
+      f.numero AS ficha,
+      p.nombre AS programa
+    FROM ficha f
+    INNER JOIN programa p ON f.id_programa = p.id_programa
+    WHERE 1=1
+  `;
+  const params = [];
+
+  if (ficha) {
+    query += ' AND f.numero = ?';
+    params.push(ficha);
+  }
+
+  if (programa) {
+    query += ' AND p.nombre LIKE ?';
+    params.push(`%${programa}%`);
+  }
+
+  connection.query(query, params, (err, results) => {
+    if (err) {
+      console.error('Error en la consulta:', err);
+      return res.status(500).json({ error: 'Error en la consulta' });
+    }
+
+    res.json(results);
+  });
+};
+
+// 2️⃣ Obtener competencias según ficha y programa
 exports.getCompetencias = (req, res) => {
   const { ficha, programa } = req.query;
   if (!ficha || !programa) {
@@ -25,7 +59,7 @@ exports.getCompetencias = (req, res) => {
   });
 };
 
-// 2️⃣ Obtener resultados de aprendizaje según competencia
+// 3️⃣ Obtener resultados de aprendizaje según competencia
 exports.getResultados = (req, res) => {
   const { competenciaId } = req.query;
   if (!competenciaId) {
@@ -46,7 +80,7 @@ exports.getResultados = (req, res) => {
   });
 };
 
-// 3️⃣ Obtener aprendices filtrados y su estado de evaluación por RA
+// 4️⃣ Obtener aprendices filtrados y su estado de evaluación por RA
 exports.getAprendices = (req, res) => {
   const { ficha, programa, competenciaId, resultadoId } = req.query;
   if (!ficha || !programa || !competenciaId || !resultadoId) {
@@ -80,4 +114,3 @@ exports.getAprendices = (req, res) => {
     }
   );
 };
-

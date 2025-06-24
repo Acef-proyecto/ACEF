@@ -141,11 +141,11 @@ html, body {
 }
 
 .dropdown {
-  background-color: var(--verde-principal);
-  color: white;
+  background-color: white;
+  color: black;
+  border: 2px solid var(--verde-principal);
   padding: 10px 16px;
   font-size: 1.25rem;
-  border: none;
   cursor: pointer;
   border-radius: 4px;
   transition: background 0.2s ease;
