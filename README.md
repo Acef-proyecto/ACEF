@@ -119,4 +119,4 @@ Para dudas o mejoras, contacta a:
 - GitHub: [samuelt14](https://github.com/samuelt14)
 - GitHub: [Lisseth77](https://github.com/Lisseth77)
 - GitHub: [SantiagoR29](https://github.com/SantiagoR29)
-- GitHub: [Lisseth77](https://github.com/MarceB2006)
+- GitHub: [MarceB2006](https://github.com/MarceB2006)
