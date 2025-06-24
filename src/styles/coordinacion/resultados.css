@@ -108,66 +108,6 @@ html, body {
   margin: 0;
 }
 
-.filtros {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.grupo-dropdowns {
-  display: flex;
-  gap: 25px;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-
-.grupo-boton {
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
-  padding-left: 5px;
-}
-
-.dropdown {
-  background-color: var(--verde-principal);
-  color: white;
-  padding: 10px 16px;
-  font-size: 1.25rem;
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background 0.2s ease;
-}
-
-.dropdown:hover {
-  background-color: #018d00;
-}
-
-.boton-lupa {
-  background-color: var(--beige);
-  border: 2px solid var(--verde-principal);
-  color: var(--verde-principal);
-  padding: 10px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  transition: background 0.2s ease;
-  width: 48px;
-  height: 48px;
-}
-
-.boton-lupa:hover {
-  background-color: var(--beige-claro);
-}
-
 .info {
   font-size: 1.2rem;
   color: var(--azul-oscuro);

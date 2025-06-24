@@ -15,13 +15,22 @@ const Filtros = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Extraer ficha y programa del estado enviado desde <Inicio />
+  // Obtener ficha y programa desde location.state
   const ficha = location.state?.ficha || "";
   const programa = location.state?.programa || "";
 
+  // Redirigir si no hay datos válidos
+  useEffect(() => {
+    if (!ficha || !programa) {
+      navigate("/coordinacion/inicio");
+    }
+  }, [ficha, programa, navigate]);
 
+  // Obtener texto completo de la competencia y RA seleccionados
+  const competenciaTexto = competencias.find(c => c.id_competencia === parseInt(competenciaSeleccionada))?.nombre || "";
+  const resultadoTexto = resultados.find(r => r.id_r_a === parseInt(resultadoSeleccionado))?.descripcion || "";
 
-  // Cargar competencias
+  // Cargar competencias del backend
   useEffect(() => {
     const cargarCompetencias = async () => {
       if (ficha && programa) {
@@ -36,7 +45,7 @@ const Filtros = () => {
     cargarCompetencias();
   }, [ficha, programa]);
 
-  // Cargar resultados al seleccionar una competencia
+  // Cargar resultados del backend cuando cambia la competencia
   useEffect(() => {
     const cargarResultados = async () => {
       if (competenciaSeleccionada) {
@@ -54,9 +63,19 @@ const Filtros = () => {
     cargarResultados();
   }, [competenciaSeleccionada]);
 
+  // Redirigir a Resultados con datos completos
   const handleBuscar = () => {
     if (competenciaSeleccionada && resultadoSeleccionado) {
-      navigate(`/coordinacion/resultados?ficha=${ficha}&programa=${programa}&competenciaId=${competenciaSeleccionada}&resultadoId=${resultadoSeleccionado}`);
+      navigate('/coordinacion/resultados', {
+        state: {
+          programa,
+          ficha,
+          competencia: competenciaTexto,
+          resultadoAprendizaje: resultadoTexto,
+          competencia_id: competenciaSeleccionada,
+          resultado_id: resultadoSeleccionado
+        }
+      });
     } else {
       alert("Por favor selecciona una competencia y un resultado.");
     }
@@ -77,16 +96,13 @@ const Filtros = () => {
         {menuOpen && (
           <nav className="menu" aria-label="Menú principal">
             <button type="button" className="menu-button" onClick={() => navigate('/')}>
-              <FaSignOutAlt style={{ marginRight: "8px" }} />
-              Cerrar sesión
+              <FaSignOutAlt style={{ marginRight: "8px" }} /> Cerrar sesión
             </button>
             <button type="button" className="menu-button">
-              <FaBook style={{ marginRight: "8px" }} />
-              Manual
+              <FaBook style={{ marginRight: "8px" }} /> Manual
             </button>
             <button type="button" className="menu-button" onClick={() => navigate('/coordinacion/inicio')}>
-              <FaArrowLeft style={{ marginRight: "8px" }} />
-              Volver
+              <FaArrowLeft style={{ marginRight: "8px" }} /> Volver
             </button>
           </nav>
         )}

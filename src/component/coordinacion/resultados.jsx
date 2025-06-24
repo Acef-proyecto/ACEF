@@ -1,64 +1,91 @@
 import React, { useEffect, useState } from 'react';
-import { FaSignOutAlt, FaBook, FaSearch, FaArrowLeft } from "react-icons/fa";
+import { FaSignOutAlt, FaBook, FaArrowLeft } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import "../../styles/coordinacion/resultados.css";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Resultados = () => {
   const [menuOpen, setMenuOpen] = useState(false);
- //const [aprendices, setAprendices] = useState([]);
-  /*const [info, setInfo] = useState({
-    programa: '',
-    ficha: '',
-    trimestre: '',
-    competencia: '',
-    resultadoAprendizaje: ''
-  });*/
+  const [aprendices, setAprendices] = useState([]);
+  const [info, setInfo] = useState({});
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(null);
 
-  const [aprendices, setAprendices] = useState([
-  { nombre: "Juan Pérez", evaluado: "Evaluado" }
-  ]);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const [info, setInfo] = useState({
-    programa: "ADSO",
-    ficha: "2926503",
-    trimestre: "6",
-    competencia: "Resultado de Aprendizaje de la Inducción",
-    resultadoAprendizaje: " 01  Identificar la dinámica organizacional del SENA y el rol de la formación profesional integral de acuerdo con su proyecto de vida y el desarrollo profesional."
-  });
+  // Validar que vienen datos de Filtros.jsx
+  /*useEffect(() => {
+    if (!location.state) {
+      navigate('/coordinacion/filtro');
+      return;
+    }
 
+    const { programa, ficha, competencia, resultadoAprendizaje } = location.state;
 
-  // Obtener datos del backend
-  useEffect(() => {
     const fetchDatos = async () => {
       try {
-        const resAprendices = await fetch('http://localhost:8000/aprendices');
-        const dataAprendices = await resAprendices.json();
-        const formateados = dataAprendices.map(a => ({
-          nombre: `${a.nombres} ${a.apellidos}`,
-          evaluado: `${a.evaluado}`
-        }));
-        setAprendices(formateados);
+        const params = new URLSearchParams({
+          programa,
+          ficha,
+          competencia,
+          resultado: resultadoAprendizaje
+        });
 
-        const resInfo = await fetch('http://localhost:8000/informacion');
-        const dataInfo = await resInfo.json();
-        setInfo(dataInfo);
+        const res = await fetch(`http://localhost:8000/resultados?${params.toString()}`);
+        if (!res.ok) throw new Error("Error en la consulta");
 
-      } catch (error) {
-        console.error('Error al cargar los datos:', error);
+        const data = await res.json();
+
+        setAprendices(data.aprendices || []);
+        setInfo(data.info || {
+          programa,
+          ficha,
+          competencia,
+          resultadoAprendizaje
+        });
+        setCargando(false);
+      } catch (err) {
+        setError("No se pudo cargar la información.");
+        setCargando(false);
       }
     };
 
     fetchDatos();
-  }, []);
+  }, [location, navigate]);*/
 
-  const handleChange = (index, field, value) => {
-    const nuevos = [...aprendices];
-    nuevos[index][field] = value;
-    setAprendices(nuevos);
-  };
+  useEffect(() => {
+    if (!location.state) {
+      navigate('/coordinacion/filtro');
+      return;
+    }
 
-  const navigate = useNavigate();
+    const { programa, ficha, competencia, resultadoAprendizaje } = location.state;
+
+    // Datos simulados
+    const datosSimulados = {
+      info: {
+        programa,
+        ficha,
+        competencia,
+        resultadoAprendizaje
+      },
+      aprendices: [
+        { nombre: "Ana Rodríguez", evaluado: "Aprobado" },
+        { nombre: "Carlos Gómez", evaluado: "Pendiente" },
+        { nombre: "Laura Mendoza", evaluado: "" }
+      ]
+    };
+
+    // Simula carga
+    setTimeout(() => {
+      setInfo(datosSimulados.info);
+      setAprendices(datosSimulados.aprendices);
+      setCargando(false);
+    }, 1000); // solo para mostrar el "cargando..." un segundo
+
+  }, [location, navigate]);
+
 
   return (
     <div className="pantalla">
@@ -77,46 +104,44 @@ const Resultados = () => {
       </header>
 
       <div className="contenido">
-      <div className="filtros">
-        <div className="grupo-dropdowns">
-          <button className="dropdown">Competencia ▼</button>
-          <button className="dropdown">R.A ▼</button>
-        </div>
-        <div className="grupo-boton">
-          <button className="boton-lupa" onClick={() => navigate('/coordinacion/resultados')}>
-            <FaSearch />
-          </button>
-        </div>
-       </div>
+        {cargando ? (
+          <p>Cargando datos...</p>
+        ) : error ? (
+          <p className="error">{error}</p>
+        ) : (
+          <>
+            <div className="info">
+              <p><strong>Programa:</strong> {info.programa}</p>
+              <p><strong>Ficha:</strong> {info.ficha}</p>
+              <p><strong>Competencia:</strong> {info.competencia}</p>
+              <p><strong>R.A:</strong> {info.resultadoAprendizaje}</p>
+            </div>
 
-      <div className="info">
-        <p><strong>Programa:</strong>{info.programa}</p>
-        <p><strong>Ficha:</strong> {info.ficha}</p>
-        <p><strong>Trimestre:</strong> {info.trimestre}</p>
-        <p><strong>Competencia:</strong> {info.competencia}</p>
-        <p><strong>R.A:</strong>{info.resultadoAprendizaje}</p>
+            {aprendices.length > 0 ? (
+              <table className="tabla-aprendices">
+                <thead>
+                  <tr>
+                    <th>N°</th>
+                    <th>APRENDICES</th>
+                    <th>EVALUADO</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {aprendices.map((a, i) => (
+                    <tr key={i}>
+                      <td>{i + 1}</td>
+                      <td>{a.nombre}</td>
+                      <td style={{ width: "375px" }}>{a.evaluado || "No evaluado"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No hay aprendices para mostrar.</p>
+            )}
+          </>
+        )}
       </div>
-      
-
-      <table className="tabla-aprendices">
-        <thead>
-          <tr>
-            <th>N°</th>
-            <th>APRENDICES</th>
-            <th>EVALUADO</th>
-          </tr>
-        </thead>
-        <tbody>
-          {aprendices.map((a, i) => (
-            <tr key={i}>
-              <td>{i + 1}</td>
-              <td>{a.nombre}</td>
-              <td style={{ width: "375px" }}>{a.evaluado || "No evaluado"}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
     </div>
   );
 };
