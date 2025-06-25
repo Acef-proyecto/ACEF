@@ -3,6 +3,7 @@ import { FaSignOutAlt, FaBook, FaArrowLeft } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import "../../styles/coordinacion/resultados.css";
 import { useLocation, useNavigate } from 'react-router-dom';
+import { obtenerAprendices } from '../../services/filtrosService';
 
 const Resultados = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -14,78 +15,36 @@ const Resultados = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Validar que vienen datos de Filtros.jsx
-  /*useEffect(() => {
-    if (!location.state) {
-      navigate('/coordinacion/filtro');
-      return;
-    }
-
-    const { programa, ficha, competencia, resultadoAprendizaje } = location.state;
-
-    const fetchDatos = async () => {
-      try {
-        const params = new URLSearchParams({
-          programa,
-          ficha,
-          competencia,
-          resultado: resultadoAprendizaje
-        });
-
-        const res = await fetch(`http://localhost:8000/resultados?${params.toString()}`);
-        if (!res.ok) throw new Error("Error en la consulta");
-
-        const data = await res.json();
-
-        setAprendices(data.aprendices || []);
-        setInfo(data.info || {
-          programa,
-          ficha,
-          competencia,
-          resultadoAprendizaje
-        });
-        setCargando(false);
-      } catch (err) {
-        setError("No se pudo cargar la información.");
-        setCargando(false);
-      }
-    };
-
-    fetchDatos();
-  }, [location, navigate]);*/
-
   useEffect(() => {
     if (!location.state) {
       navigate('/coordinacion/filtro');
       return;
     }
 
-    const { programa, ficha, competencia, resultadoAprendizaje } = location.state;
+    const {
+      programa,
+      ficha,
+      competencia,
+      resultadoAprendizaje,
+      competencia_id,
+      resultado_id
+    } = location.state;
 
-    // Datos simulados
-    const datosSimulados = {
-      info: {
-        programa,
-        ficha,
-        competencia,
-        resultadoAprendizaje
-      },
-      aprendices: [
-        { nombre: "Ana Rodríguez", evaluado: "Aprobado" },
-        { nombre: "Carlos Gómez", evaluado: "Pendiente" },
-        { nombre: "Laura Mendoza", evaluado: "" }
-      ]
+    const fetchDatos = async () => {
+      try {
+        const aprendicesData = await obtenerAprendices(ficha, programa, competencia_id, resultado_id);
+        setAprendices(aprendicesData || []);
+        setInfo({ programa, ficha, competencia, resultadoAprendizaje });
+        setCargando(false);
+      } catch (err) {
+        console.error("Error al cargar datos:", err);
+        setError("No se pudo cargar la información.");
+        setCargando(false);
+      }
     };
 
-    // Simula carga
-    setTimeout(() => {
-      setInfo(datosSimulados.info);
-      setAprendices(datosSimulados.aprendices);
-      setCargando(false);
-    }, 1000); // solo para mostrar el "cargando..." un segundo
-
+    fetchDatos();
   }, [location, navigate]);
-
 
   return (
     <div className="pantalla">
@@ -114,7 +73,7 @@ const Resultados = () => {
               <p><strong>Programa:</strong> {info.programa}</p>
               <p><strong>Ficha:</strong> {info.ficha}</p>
               <p><strong>Competencia:</strong> {info.competencia}</p>
-              <p><strong>R.A:</strong> {info.resultadoAprendizaje}</p>
+              <p><strong>Resultado de Aprendizaje:</strong> {info.resultadoAprendizaje}</p>
             </div>
 
             {aprendices.length > 0 ? (
@@ -123,7 +82,7 @@ const Resultados = () => {
                   <tr>
                     <th>N°</th>
                     <th>APRENDICES</th>
-                    <th>EVALUADO</th>
+                    <th>ESTADO</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -131,7 +90,7 @@ const Resultados = () => {
                     <tr key={i}>
                       <td>{i + 1}</td>
                       <td>{a.nombre}</td>
-                      <td style={{ width: "375px" }}>{a.evaluado || "No evaluado"}</td>
+                      <td>{a.evaluado === 1 ? "Aprobado" : a.evaluado === 0 ? "No evaluado" : "Pendiente"}</td>
                     </tr>
                   ))}
                 </tbody>

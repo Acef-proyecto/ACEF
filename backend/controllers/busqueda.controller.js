@@ -67,10 +67,11 @@ exports.getResultados = (req, res) => {
   }
 
   const sql = `
-    SELECT ra.id_r_a, ra.numeros_r_a
+    SELECT ra.id_r_a, ra.numeros_r_a, ra.descripcion
     FROM r_a ra
     WHERE ra.competencia_id = ?
   `;
+
   connection.query(sql, [competenciaId], (err, rows) => {
     if (err) {
       console.error('Error al cargar resultados de aprendizaje:', err);

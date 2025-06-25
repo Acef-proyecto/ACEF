@@ -11,26 +11,22 @@ const Filtros = () => {
   const [resultados, setResultados] = useState([]);
   const [competenciaSeleccionada, setCompetenciaSeleccionada] = useState("");
   const [resultadoSeleccionado, setResultadoSeleccionado] = useState("");
+  const [resultadoTexto, setResultadoTexto] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Obtener ficha y programa desde location.state
   const ficha = location.state?.ficha || "";
   const programa = location.state?.programa || "";
 
-  // Redirigir si no hay datos válidos
   useEffect(() => {
     if (!ficha || !programa) {
       navigate("/coordinacion/inicio");
     }
   }, [ficha, programa, navigate]);
 
-  // Obtener texto completo de la competencia y RA seleccionados
   const competenciaTexto = competencias.find(c => c.id_competencia === parseInt(competenciaSeleccionada))?.nombre || "";
-  const resultadoTexto = resultados.find(r => r.id_r_a === parseInt(resultadoSeleccionado))?.descripcion || "";
 
-  // Cargar competencias del backend
   useEffect(() => {
     const cargarCompetencias = async () => {
       if (ficha && programa) {
@@ -45,7 +41,6 @@ const Filtros = () => {
     cargarCompetencias();
   }, [ficha, programa]);
 
-  // Cargar resultados del backend cuando cambia la competencia
   useEffect(() => {
     const cargarResultados = async () => {
       if (competenciaSeleccionada) {
@@ -58,12 +53,19 @@ const Filtros = () => {
       } else {
         setResultados([]);
         setResultadoSeleccionado("");
+        setResultadoTexto("");
       }
     };
     cargarResultados();
   }, [competenciaSeleccionada]);
 
-  // Redirigir a Resultados con datos completos
+  const handleResultadoChange = (e) => {
+    const id = e.target.value;
+    setResultadoSeleccionado(id);
+    const resultado = resultados.find(r => r.id_r_a === parseInt(id));
+    setResultadoTexto(resultado?.descripcion || "");
+  };
+
   const handleBuscar = () => {
     if (competenciaSeleccionada && resultadoSeleccionado) {
       navigate('/coordinacion/resultados', {
@@ -131,7 +133,7 @@ const Filtros = () => {
             <select
               className="dropdown"
               value={resultadoSeleccionado}
-              onChange={(e) => setResultadoSeleccionado(e.target.value)}
+              onChange={handleResultadoChange}
               disabled={!competenciaSeleccionada}
             >
               <option value="">Seleccione R.A</option>
