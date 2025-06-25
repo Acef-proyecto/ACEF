@@ -33,11 +33,12 @@ const Resultados = () => {
     const fetchDatos = async () => {
       try {
         const aprendicesData = await obtenerAprendices(ficha, programa, competencia_id, resultado_id);
+        console.log("✔️ Aprendices recibidos:", aprendicesData);
         setAprendices(aprendicesData || []);
         setInfo({ programa, ficha, competencia, resultadoAprendizaje });
         setCargando(false);
       } catch (err) {
-        console.error("Error al cargar datos:", err);
+        console.error("❌ Error al cargar datos:", err);
         setError("No se pudo cargar la información.");
         setCargando(false);
       }
@@ -81,16 +82,22 @@ const Resultados = () => {
                 <thead>
                   <tr>
                     <th>N°</th>
-                    <th>APRENDICES</th>
-                    <th>ESTADO</th>
+                    <th>Aprendices</th>
+                    <th>Estado</th>
                   </tr>
                 </thead>
                 <tbody>
                   {aprendices.map((a, i) => (
-                    <tr key={i}>
+                    <tr key={a.id_aprendiz || i}>
                       <td>{i + 1}</td>
                       <td>{a.nombre}</td>
-                      <td>{a.evaluado === 1 ? "Aprobado" : a.evaluado === 0 ? "No evaluado" : "Pendiente"}</td>
+                      <td>
+                        {a.evaluado === 1
+                          ? "Evaluado"
+                          : a.evaluado === 0
+                          ? "No evaluado"
+                          : "Pendiente"}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

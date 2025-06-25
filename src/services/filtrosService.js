@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/busqueda/"; // Cambia el puerto si tu backend usa otro
-
+const API_URL = "http://localhost:3000/api/busqueda";
 // 1️⃣ Obtener competencias según ficha y programa
 export const obtenerCompetencias = async (ficha, programa) => {
   try {
