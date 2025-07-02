@@ -7,7 +7,6 @@ import Resultados from './component/coordinacion/resultados.jsx';
 import TablaActas from './component/coordinacion/actas.jsx';
 import Alertas from './component/coordinacion/alertas.jsx';
 import Registro from './component/coordinacion/registro.jsx';
-import ActaSearch from './component/coordinacion/ActaSearch.jsx'; // ✅ importa el componente nuevo
 
 function App() {
   return (
@@ -20,7 +19,6 @@ function App() {
       <Route path="/coordinacion/actas" element={<TablaActas />} />
       <Route path="/coordinacion/alertas" element={<Alertas />} />
       <Route path="/coordinacion/registro" element={<Registro />} />
-      <Route path="/coordinacion/buscar-actas" element={<ActaSearch />} />
     </Routes>
   );
 }
