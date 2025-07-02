@@ -1,5 +1,3 @@
-// backend/services/alertService.js
-
 const cron        = require('node-cron');
 const transporter = require('../config/mail');
 const db          = require('../config/db');      // ← sin .promise()
@@ -126,14 +124,16 @@ async function processAlerts() {
   }
 }
 
-// Cron diario a las 08:00 AM Bogotá
-cron.schedule(
-  '0 8 * * *',
-  () => {
-    console.log('[AlertService] Ejecutando comprobación –', new Date());
-    processAlerts().catch(err => console.error('[AlertService ERROR]', err));
-  },
-  { timezone: 'America/Bogota' }
-);
+// Cron diario a las 08:00 AM Bogotá (solo si no estamos en un entorno de prueba)
+if (process.env.NODE_ENV !== 'test') {
+  cron.schedule(
+    '0 8 * * *',
+    () => {
+      console.log('[AlertService] Ejecutando comprobación –', new Date());
+      processAlerts().catch(err => console.error('[AlertService ERROR]', err));
+    },
+    { timezone: 'America/Bogota' }
+  );
+}
 
 module.exports = { processAlerts };

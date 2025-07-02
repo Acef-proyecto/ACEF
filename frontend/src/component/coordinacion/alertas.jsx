@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaSignOutAlt, FaBook, FaArrowLeft } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import "../../styles/coordinacion/alertas.css";
 import { useNavigate } from 'react-router-dom';
+import Asignar from "../coordinacion/asignar";
 
 const Alertas = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -12,25 +13,30 @@ const Alertas = () => {
   const [finTrimestre, setFinTrimestre] = useState('');
   const [paraTodos, setParaTodos] = useState(false);
   const [mostrarVentana, setMostrarVentana] = useState(false);
-
-  const [resultadoSeleccionado, setResultadoSeleccionado] = useState('');
-  const resultadosAprendizaje = [
-    'RA 1: Interpretar normas técnicas',
-    'RA 2: Aplicar procesos de calidad',
-    'RA 3: Evaluar resultados del proceso'
-  ];
+  const [token, setToken] = useState(null);
+  const [usuarioId, setUsuarioId] = useState(null);
 
   const navigate = useNavigate();
 
-  const handleAsignar = () => {
-    if (!resultadoSeleccionado) {
-      alert("Selecciona un resultado de aprendizaje.");
-      return;
+  // Obtener token e información del coordinador al cargar
+useEffect(() => {
+  const savedToken = localStorage.getItem('token');
+  const savedUsuario = localStorage.getItem('usuario');
+
+  if (savedToken) setToken(savedToken); // <-- asegúrate de que entra aquí
+
+
+    if (savedUsuario) {
+      try {
+        const usuario = JSON.parse(savedUsuario);
+        if (usuario?.id_usuario) {
+          setUsuarioId(usuario.id_usuario);
+        }
+      } catch (error) {
+        console.error("❌ Error al leer el usuario del localStorage:", error);
+      }
     }
-    alert(`Resultado asignado: ${resultadoSeleccionado}`);
-    setMostrarVentana(false);
-    setResultadoSeleccionado('');
-  };
+  }, []);
 
   const handleEnviarAlerta = async () => {
     if (!mensaje.trim() || (!paraTodos && !instructor.trim())) {
@@ -44,20 +50,11 @@ const Alertas = () => {
     }
 
     try {
+      // Aquí puedes hacer una petición POST si decides guardar alertas
+
       if (paraTodos) {
-        const data = {
-          mensaje,
-          fecha_inicio: inicioTrimestre,
-          fecha_fin: finTrimestre
-        };
-        // const res = await enviarAlertaTrimestral(data);
-        alert(`✅ Alerta enviada a todos los instructores.`);
+        alert("✅ Alerta enviada a todos los instructores.");
       } else {
-        const data = {
-          mensaje,
-          correo_instructor: instructor
-        };
-        // const res = await enviarAlertaIndividual(data);
         alert("✅ Alerta enviada al instructor.");
       }
 
@@ -67,7 +64,7 @@ const Alertas = () => {
       setFinTrimestre('');
       setParaTodos(false);
     } catch (error) {
-      console.error("Error al enviar la alerta:", error);
+      console.error("❌ Error al enviar la alerta:", error);
       alert("❌ Error al enviar la alerta.");
     }
   };
@@ -75,10 +72,11 @@ const Alertas = () => {
   const handleCheckboxChange = (e) => {
     const checked = e.target.checked;
     setParaTodos(checked);
-    if (checked) {
-      setInstructor('');
-    }
+    if (checked) setInstructor('');
   };
+
+  const handleCerrarAsignar = () => setMostrarVentana(false);
+  const handleAsignacionExitosa = () => setMostrarVentana(false);
 
   return (
     <div className="pantalla">
@@ -87,16 +85,13 @@ const Alertas = () => {
         {menuOpen && (
           <div className="menu">
             <button onClick={() => navigate('/')}>
-              <FaSignOutAlt style={{ marginRight: "8px" }} />
-              Cerrar sesión
+              <FaSignOutAlt style={{ marginRight: "8px" }} /> Cerrar sesión
             </button>
             <button>
-              <FaBook style={{ marginRight: "8px" }} />
-              Manual
+              <FaBook style={{ marginRight: "8px" }} /> Manual
             </button>
             <button onClick={() => navigate('/coordinacion/inicio')}>
-              <FaArrowLeft style={{ marginRight: "8px" }} />
-              Volver
+              <FaArrowLeft style={{ marginRight: "8px" }} /> Volver
             </button>
           </div>
         )}
@@ -137,16 +132,9 @@ const Alertas = () => {
                     type="checkbox"
                     checked={paraTodos}
                     onChange={handleCheckboxChange}
-                  />
-                  Todos
+                  /> Todos
                 </label>
               </td>
-              <button
-                className="btn-verde-asignar"
-                onClick={() => setMostrarVentana(true)}
-              >
-                Asignar R.A
-              </button>
             </tr>
           </tbody>
         </table>
@@ -173,36 +161,30 @@ const Alertas = () => {
           <button className="btn-verde" onClick={handleEnviarAlerta}>
             Enviar Alerta
           </button>
+
+          <button
+            className="btn-verde-asignar"
+            onClick={() => {
+              if (!instructor || !token) {
+                alert("Debe ingresar el correo del instructor y haber iniciado sesión.");
+                return;
+              }
+              setMostrarVentana(true);
+            }}
+          >
+            Asignar R.A
+          </button>
         </div>
-
-        {/* Modal para asignar R.A */}
-        {mostrarVentana && (
-          <div className="modal-ventana" role="dialog" aria-modal="true">
-            <div className="modal-contenido">
-              <p><strong><em>Seleccione los Resultados de aprendizaje que el instructor va a calificar</em></strong></p>
-
-              <div className="modal-content">
-                <label className="modal-label">R.A</label>
-                <select
-                  className="modal-select"
-                  value={resultadoSeleccionado}
-                  onChange={(e) => setResultadoSeleccionado(e.target.value)}
-                >
-                  <option value="">Seleccione...</option>
-                  {resultadosAprendizaje.map((ra, index) => (
-                    <option key={index} value={ra}>{ra}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="modal-buttons">
-                <button onClick={handleAsignar} className="modal-button">Asignar</button>
-                <button onClick={() => setMostrarVentana(false)} className="btn-cerrar">Cancelar</button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Modal de Asignación */}
+      <Asignar
+  visible={mostrarVentana}
+  onClose={handleCerrarAsignar}
+  onAsignar={handleAsignacionExitosa}
+  token={token} // ✅ NECESARIO
+  correoInstructor={instructor} // ✅ NUEVO: correo, no id
+/>
     </div>
   );
 };

@@ -24,10 +24,11 @@ exports.buscarFichaPrograma = (req, res) => {
     params.push(`%${programa}%`);
   }
 
+  // Asegúrate de que el mock esté correctamente configurado en los tests
   connection.query(query, params, (err, results) => {
     if (err) {
       console.error('Error en la consulta:', err);
-      return res.status(500).json({ error: 'Error en la consulta' });
+      return res.status(500).json({ error: 'Error en la consulta' });  // Verifica si el mensaje de error es el esperado en los tests
     }
 
     res.json(results);

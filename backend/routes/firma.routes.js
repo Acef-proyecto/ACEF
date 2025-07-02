@@ -1,4 +1,3 @@
-// backend/routes/firma.routes.js
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
@@ -7,7 +6,9 @@ const db = require('../config/db');
 
 const router = express.Router();
 
-// Configurar almacenamiento con multer
+// ───────────────────────
+// Configuración de Multer
+// ───────────────────────
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const dir = path.join(__dirname, '..', 'uploads', 'firmas');
@@ -21,33 +22,83 @@ const storage = multer.diskStorage({
     cb(null, uniqueName);
   }
 });
-
 const upload = multer({ storage });
 
-// Ruta para subir la firma digital
+/**
+ * @swagger
+ * tags:
+ *   - name: Firma
+ *     description: Gestión de firmas digitales para usuarios autorizados
+ */
+
+/**
+ * @swagger
+ * /api/firma/subir/{id_usuario}:
+ *   post:
+ *     summary: Subir firma digital para un usuario autorizado
+ *     tags: [Firma]
+ *     parameters:
+ *       - in: path
+ *         name: id_usuario
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del usuario que sube la firma
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - firma
+ *             properties:
+ *               firma:
+ *                 type: string
+ *                 format: binary
+ *                 description: Archivo de imagen de la firma
+ *     responses:
+ *       200:
+ *         description: Firma subida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensaje:
+ *                   type: string
+ *                   example: Firma subida exitosamente
+ *                 ruta:
+ *                   type: string
+ *                   example: /uploads/firmas/1719863512-firma.png
+ *       400:
+ *         description: No se envió ningún archivo
+ *       403:
+ *         description: Usuario no autorizado (ej. aprendiz)
+ *       404:
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error al guardar o validar firma
+ */
 router.post('/subir/:id_usuario', upload.single('firma'), (req, res) => {
   const { id_usuario } = req.params;
 
-  // ✅ Validar que se haya enviado un archivo
   if (!req.file) {
     return res.status(400).json({ mensaje: 'No se envió ningún archivo' });
   }
 
   const firmaPath = `uploads/firmas/${req.file.filename}`;
 
-  // Verificar si el usuario puede subir firma
   db.query('SELECT rol FROM usuario WHERE id_usuario = ?', [id_usuario], (err, rows) => {
     if (err) return res.status(500).json({ mensaje: 'Error al buscar el usuario' });
     if (!rows.length) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
 
     const { rol } = rows[0];
     if (rol === 'aprendiz') {
-      // ❌ Borrar archivo si no tiene permiso
       fs.unlinkSync(path.join(__dirname, '..', firmaPath));
       return res.status(403).json({ mensaje: 'Los aprendices no pueden tener firma digital' });
     }
 
-    // ✅ Actualizar la ruta de firma
     db.query(
       'UPDATE usuario SET firma = ? WHERE id_usuario = ?',
       [firmaPath, id_usuario],

@@ -67,8 +67,9 @@ const login = (req, res) => {
       return res.status(401).json({ mensaje: 'Correo o contraseña incorrectos' });
     }
 
+    // ✅ CORREGIDO: usar "id_usuario" en el token
     const token = jwt.sign({
-      id: usuario.id_usuario,
+      id_usuario: usuario.id_usuario,
       nombre: usuario.nombre
     }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
@@ -76,7 +77,7 @@ const login = (req, res) => {
       mensaje: 'Inicio de sesión exitoso',
       token,
       usuario: {
-        id: usuario.id_usuario,
+        id_usuario: usuario.id_usuario,
         nombre: usuario.nombre,
         apellido: usuario.apellido,
         rol: usuario.rol,
@@ -98,7 +99,7 @@ const forgotPassword = async (req, res) => {
 
     const user = results[0];
     const token = jwt.sign(
-      { id: user.id_usuario, correo: user.correo },
+      { id_usuario: user.id_usuario, correo: user.correo },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
@@ -141,7 +142,7 @@ const forgotPassword = async (req, res) => {
   });
 };
 
-// Verificar si el token es válido (opcional pero útil en React)
+// Verificar si el token de recuperación es válido
 const verificarTokenReset = (req, res) => {
   const { token } = req.params;
   try {
@@ -156,6 +157,11 @@ const verificarTokenReset = (req, res) => {
 const resetPassword = (req, res) => {
   const { token } = req.params;
   const { nuevaPassword } = req.body;
+
+  // Validar que la nueva contraseña se haya enviado
+  if (!nuevaPassword) {
+    return res.status(400).json({ error: 'Nueva contraseña es requerida' });
+  }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -182,4 +188,3 @@ module.exports = {
   resetPassword,
   verificarTokenReset
 };
-  

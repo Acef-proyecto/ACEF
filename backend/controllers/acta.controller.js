@@ -1,7 +1,6 @@
 const db = require('../config/db');
 const transporter = require('../config/mail'); // asegúrate de tener esto configurado (nodemailer)
 
-// 1️⃣ Subir un acta
 exports.subir = (req, res) => {
   const { anexos } = req.body;
 
@@ -25,23 +24,20 @@ exports.subir = (req, res) => {
   });
 };
 
-// 2️⃣ Compartir acta con otro instructor
 exports.compartirActa = async (req, res) => {
   const { id_acta, correo_destino } = req.body;
-  const id_usuario = req.usuario?.id; // requiere middleware auth
+  const id_usuario = req.usuario?.id;
 
   if (!id_acta || !correo_destino) {
     return res.status(400).json({ mensaje: "Faltan datos necesarios (id_acta o correo_destino)." });
   }
 
   try {
-    // Verificar que el acta exista
     const [acta] = await db.query("SELECT * FROM acta WHERE id_acta = ?", [id_acta]);
     if (acta.length === 0) {
       return res.status(404).json({ mensaje: "El acta no existe." });
     }
 
-    // Obtener el id del receptor a partir del correo
     const [destinatario] = await db.query("SELECT id_usuario FROM usuario WHERE correo = ?", [correo_destino]);
     if (destinatario.length === 0) {
       return res.status(404).json({ mensaje: "El correo destino no pertenece a ningún usuario." });
@@ -49,13 +45,11 @@ exports.compartirActa = async (req, res) => {
 
     const receptor_id = destinatario[0].id_usuario;
 
-    // Guardar en tabla de actas_compartidas usando receptor_id
     await db.query(
       "INSERT INTO actas_compartidas (id_acta, correo_destino, compartido_por, receptor_id) VALUES (?, ?, ?, ?)",
       [id_acta, correo_destino, id_usuario, receptor_id]
     );
 
-    // [Opcional] Enviar correo
     const mailOptions = {
       from: process.env.EMAIL_FROM,
       to: correo_destino,
@@ -76,7 +70,6 @@ exports.compartirActa = async (req, res) => {
   }
 };
 
-// 3️⃣ Obtener actas compartidas con el usuario actual
 exports.obtenerActasCompartidas = (req, res) => {
   const id_usuario = req.usuario?.id;
 

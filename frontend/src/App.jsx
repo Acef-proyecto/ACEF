@@ -18,7 +18,7 @@ function App() {
       <Route path="/coordinacion/resultados" element={<Resultados />} />
       <Route path="/coordinacion/actas" element={<TablaActas />} />
       <Route path="/coordinacion/alertas" element={<Alertas />} />
-      <Route path="/coordinacion/registro" element={<Registro />} /> 
+      <Route path="/coordinacion/registro" element={<Registro />} />
     </Routes>
   );
 }

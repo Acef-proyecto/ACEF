@@ -15,8 +15,8 @@ function LoginForm() {
 
     try {
       const response = await loginUsuario({
-        Correo: correo,
-        Contraseña: contrasena
+        correo,          // ← minúsculas, como lo espera el backend
+        contrasena       // ← minúsculas
       });
 
       // Guardar token y usuario en localStorage
@@ -31,10 +31,11 @@ function LoginForm() {
       } else if (rol === 'coordinador') {
         navigate('/coordinacion/inicio');
       } else {
-        navigate('/'); // ruta por defecto o acceso denegado
+        navigate('/'); // ruta por defecto
       }
 
     } catch (err) {
+      console.error("❌ Error en login:", err);
       setError(err.mensaje || 'Error al iniciar sesión');
     }
   };
