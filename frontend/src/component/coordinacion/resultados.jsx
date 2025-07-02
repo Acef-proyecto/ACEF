@@ -54,7 +54,16 @@ const Resultados = () => {
         {menuOpen && (
           <div className="menu">
             <button onClick={() => navigate('/')}><FaSignOutAlt style={{ marginRight: "8px" }} />Cerrar sesión</button>
-            <button><FaBook style={{ marginRight: "8px" }} />Manual</button>
+            <a
+  href="/manual.html"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="menu-link"
+  style={{ display: "flex", alignItems: "center", padding: "10px", textDecoration: "none", color: "inherit" }}
+>
+  <FaBook style={{ marginRight: "8px" }} />Manual
+</a>
+
             <button onClick={() => navigate('/coordinacion/filtro')}><FaArrowLeft style={{ marginRight: "8px" }} />Volver</button>
           </div>
         )}

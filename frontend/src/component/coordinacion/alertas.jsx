@@ -91,8 +91,16 @@ const Alertas = () => {
               Cerrar sesión
             </button>
             <button>
-              <FaBook style={{ marginRight: "8px" }} />
-              Manual
+              <a
+  href="/manual.html"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="menu-link"
+  style={{ display: "flex", alignItems: "center", padding: "10px", textDecoration: "none", color: "inherit" }}
+>
+  <FaBook style={{ marginRight: "8px" }} />Manual
+</a>
+
             </button>
             <button onClick={() => navigate('/coordinacion/inicio')}>
               <FaArrowLeft style={{ marginRight: "8px" }} />
