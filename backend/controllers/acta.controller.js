@@ -51,8 +51,8 @@ exports.compartirActa = async (req, res) => {
 
     // Guardar en tabla de actas_compartidas usando receptor_id
     await db.query(
-      "INSERT INTO actas_compartidas (id_acta, correo_destino, compartido_por, receptor_id) VALUES (?, ?, ?, ?)",
-      [id_acta, correo_destino, id_usuario, receptor_id]
+      "INSERT INTO actas_compartidas (id_acta, correo_destino, compartido_por) VALUES (?, ?, ?)",
+      [id_acta, correo_destino, id_usuario]
     );
 
     // [Opcional] Enviar correo

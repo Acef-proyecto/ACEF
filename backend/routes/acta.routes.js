@@ -5,6 +5,8 @@ const multer         = require('multer');
 const path           = require('path');
 const db             = require('../config/db');
 const authMiddleware = require('../middleware/auth.middleware');
+const actaController = require('../controllers/acta.Controller');
+
 
 const router = express.Router();
 
@@ -120,6 +122,7 @@ router.get('/', authMiddleware, (req, res) => {
   });
 });
 
+// ✅ NUEVA RUTA PARA COMPARTIR ACTA
+router.post('/compartir', authMiddleware, actaController.compartirActa);
 
 module.exports = router;
-  

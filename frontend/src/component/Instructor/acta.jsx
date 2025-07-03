@@ -148,7 +148,6 @@ const Acta = () => {
       </header>
 
       <div className="contenido-flex">
-
         <aside className="panel-secundario">
           <div className="contenedor-botones">
             <button className="boton-verde" onClick={() => {
@@ -186,25 +185,29 @@ const Acta = () => {
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
 
+          {/* ✅ Subir Acta con setIdActa y auto abrir compartir */}
           {modalAbierto && (
             <SubirActa
               actaRef={actaRef}
               onClose={() => setModalAbierto(false)}
-              setIdActa={setIdActa}
+              setIdActa={(id) => {
+                setIdActa(id);
+                setModalAbierto(false);
+                setModalCompartirAbierto(true); // 👉 abrir compartir automáticamente
+              }}
             />
           )}
 
+          {/* ✅ idActa corregido (minúscula) */}
           {modalCompartirAbierto && (
             <CompartirCorreo
-              IdActa={idActa}
+              idActa={idActa}
               onClose={() => setModalCompartirAbierto(false)}
             />
           )}
 
           {modalVentana && (
-            <ListaActas
-              onClose={() => setModalVentana(false)}
-            />
+            <ListaActas onClose={() => setModalVentana(false)} />
           )}
         </main>
       </div>

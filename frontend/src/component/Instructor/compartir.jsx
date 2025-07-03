@@ -8,27 +8,35 @@ export default function CompartirCorreo({ onClose, idActa }) {
   const [enviando, setEnviando] = useState(false);
 
   const handleCompartir = async () => {
-    if (!correo) {
-      setMensaje('❌ Ingresa el correo del instructor.');
-      return;
-    }
+  if (!correo) {
+    setMensaje('❌ Ingresa el correo del instructor.');
+    return;
+  }
 
-    try {
-      setEnviando(true);
-      setMensaje('');
-      const token = localStorage.getItem('token');
+  if (!idActa) {
+    setMensaje('❌ ID del acta no disponible.');
+    console.warn("⚠️ idActa no recibido en el componente:", idActa);
+    return;
+  }
 
-      await compartirActa({ id_acta: idActa, correo_destino: correo }, token);
+  try {
+    setEnviando(true);
+    setMensaje('');
+    const token = localStorage.getItem('token');
 
-      setMensaje('✅ Acta compartida exitosamente.');
-    } catch (error) {
-      console.error(error);
-      const errorMsg = error.response?.data?.mensaje || 'No se pudo compartir el acta.';
-      setMensaje(`❌ Error: ${errorMsg}`);
-    } finally {
-      setEnviando(false);
-    }
-  };
+    console.log("📤 Enviando:", { id_acta: idActa, correo_destino: correo });
+    await compartirActa({ id_acta: idActa, correo_destino: correo }, token);
+
+    setMensaje('✅ Acta compartida exitosamente.');
+  } catch (error) {
+    console.error(error);
+    const errorMsg = error.response?.data?.mensaje || 'No se pudo compartir el acta.';
+    setMensaje(`❌ Error: ${errorMsg}`);
+  } finally {
+    setEnviando(false);
+  }
+};
+
 
   return (
     <div className="modal-overlay">
