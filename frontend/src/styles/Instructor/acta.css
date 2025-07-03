@@ -108,33 +108,40 @@ body {
   margin-right: 8px;
 }
 
-.contenido {
+/* FLEX CONTENEDOR NUEVO */
+.contenido-flex {
   display: flex;
-  height: calc(100vh - 100px);
   width: 100%;
+  height: calc(100vh - 100px);
   overflow: hidden;
 }
 
+/* PANEL PRINCIPAL */
 .panel-principal {
-  flex-grow: 1;
+  flex: 3;
   padding: 40px;
   overflow-y: auto;
   background-color: var(--beige-claro);
   max-height: calc(100vh - 100px);
-  width: 100%;
   position: relative;
 }
 
-button,
-input,
-textarea,
-select {
-  transition: all 0.2s ease-in-out;
+/* PANEL SECUNDARIO NUEVO */
+.panel-secundario {
+  flex: 1;
+  padding: 24px;
+  background-color: var(--azul-oscuro);
+  border-left: 2px solid #ccc;
+  max-width: 245px;
+  width: 100%;
+  overflow-y: auto;
 }
 
+/* BOTONES */
 .contenedor-botones {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .boton-verde {
@@ -147,62 +154,45 @@ select {
   border-radius: 4px;
   transition: background 0.3s ease;
   min-width: 150px;
-  margin-bottom: 10px;
-  margin-right: 10px;
-  margin-top: 25px;
+  margin: 10px;
   font-size: 18px;
 }
-
 
 .boton-verde:hover {
   background-color: #028a00;
 }
 
-body {
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
-  padding: 20px;
+/* ACTA - ESTILO DE IMPRESIÓN Y FORMATO A4 */
+@media print {
+  #acta {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0;
+    padding: 5mm;
+    box-sizing: border-box;
+  }
+
+  h2 {
+    page-break-before: always;
+    margin-top: 0;
+  }
+
+  table, tr, td, th {
+    page-break-inside: avoid;
+  }
 }
-.container {
-  background: white;
-  max-width: 1000px;
-  margin: auto;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 2px solid #000;
-  padding-bottom: 10px;
-}
-.header .title {
-  text-align: center;
-  flex: 1;
-  font-size: 20px;
-  font-weight: bold;
-}
-h2 {
-  font-size: 18px;
-  background: #e0e0e0;
-  padding: 8px;
-  margin-top: 20px;
-  page-break-before: always;
-}
+
+/* TABLAS, TEXTO Y CAMPOS */
 table {
   width: 100%;
   border-collapse: collapse;
   margin: 15px 0;
-  page-break-inside: avoid;
 }
+
 th, td {
   border: 1px solid #444;
   padding: 8px;
   text-align: left;
-}
-tr, td {
-  page-break-inside: avoid;
 }
 
 input[type="text"], textarea {
@@ -214,45 +204,29 @@ input[type="text"], textarea {
   outline: none;
   padding: 4px;
 }
+
 textarea {
   resize: vertical;
 }
+
+h2 {
+  font-size: 18px;
+  background: #e0e0e0;
+  padding: 8px;
+  margin-top: 20px;
+  page-break-before: always;
+}
+
 footer {
   text-align: center;
   font-size: 12px;
   margin-top: 30px;
 }
 
-/* style.css */
-@media print {
-  /* Hace que tu contenedor ocupe exactamente un A4 vertical */
-  #acta {
-    width: 210mm;
-    min-height: 297mm;
-    margin: 0;
-    padding: 5mm;         /* pequeño margen interno */
-    box-sizing: border-box;
-  }
-}
-
-@media print {
-  /* Antes de cada sección, fuerza salto de página */
-  h2 {
-    page-break-before: always;
-    margin-top: 0;
-  }
-
-  /* Evita partir tablas entre páginas */
-  table, tr, td, th {
-    page-break-inside: avoid;
-  }
-}
-
-.container table {
-  border: 1px solid #444;
-}
-
-h2 {
-  background: #e0e0e0;
-  padding: 8px;
+.container {
+  background: white;
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }

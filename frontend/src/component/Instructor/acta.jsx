@@ -147,14 +147,9 @@ const Acta = () => {
         </div>
       </header>
 
-      <div className="contenido">
-        <main className="panel-principal">
-          <div
-            id="acta"
-            ref={actaRef}
-            dangerouslySetInnerHTML={{ __html: htmlContent }}
-          />
+      <div className="contenido-flex">
 
+        <aside className="panel-secundario">
           <div className="contenedor-botones">
             <button className="boton-verde" onClick={() => {
               if (!idActa) {
@@ -178,6 +173,14 @@ const Acta = () => {
               Descargar
             </button>
           </div>
+        </aside>
+
+        <main className="panel-principal">
+          <div
+            id="acta"
+            ref={actaRef}
+            dangerouslySetInnerHTML={{ __html: htmlContent }}
+          />
 
           {modalAbierto && (
             <SubirActa
