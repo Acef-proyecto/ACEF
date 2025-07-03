@@ -31,94 +31,60 @@ router.post(
   authMiddleware,
   upload.single('archivo'),
   (req, res) => {
-    const { ficha_id } = req.body;
-    const usuarioId    = req.usuario.id;  // ID del instructor que sube
+    const { ficha_id } = req.body; // ← esto es el NÚMERO, no el ID
+    const usuarioId = req.usuario.id;
+
     if (!req.file || !ficha_id) {
-      return res
-        .status(400)
-        .json({ mensaje: 'PDF (archivo) y ficha_id son obligatorios' });
+      return res.status(400).json({ mensaje: 'PDF (archivo) y ficha_id son obligatorios' });
     }
-    const url = `${req.protocol}://${req.get('host')}/uploads/actas/${req.file.filename}`;
 
-    // 2.1 Insertar en tabla acta incluyendo usuario_id
-    db.query(
-      'INSERT INTO acta (anexos, usuario_id) VALUES (?, ?)',
-      [url, usuarioId],
-      (err, result) => {
-        if (err) {
-          console.error('[Acta ERROR]', err);
-          return res.status(500).json({ mensaje: 'Error al guardar acta' });
-        }
-        const actaId = result.insertId;
-
-        // 2.2 Relacionar con ficha incluyendo fecha_subida
-        db.query(
-          'INSERT INTO acta_has_ficha (acta_id, ficha_id, fecha_subida) VALUES (?, ?, NOW())',
-          [actaId, ficha_id],
-          (err2) => {
-            if (err2) {
-              console.error('[Acta-Ficha ERROR]', err2);
-              return res
-                .status(500)
-                .json({ mensaje: 'Error al asociar acta con ficha' });
-            }
-            res.status(201).json({
-              mensaje: 'Acta subida y asociada a ficha correctamente',
-              actaId,
-              url
-            });
-          }
-        );
+    // 1. Buscar el ID real de la ficha por su número
+    db.query('SELECT id_ficha FROM ficha WHERE numero = ?', [ficha_id], (err, resultados) => {
+      if (err) {
+        console.error('[FICHA LOOKUP ERROR]', err);
+        return res.status(500).json({ mensaje: 'Error al buscar ficha' });
       }
-    );
+
+      if (resultados.length === 0) {
+        return res.status(404).json({ mensaje: 'Ficha no encontrada' });
+      }
+
+      const idFicha = resultados[0].id_ficha;
+      const url = `${req.protocol}://${req.get('host')}/uploads/actas/${req.file.filename}`;
+
+      // 2. Insertar el acta
+      db.query(
+        'INSERT INTO acta (anexos, usuario_id) VALUES (?, ?)',
+        [url, usuarioId],
+        (err2, result) => {
+          if (err2) {
+            console.error('[Acta ERROR]', err2);
+            return res.status(500).json({ mensaje: 'Error al guardar acta' });
+          }
+
+          const actaId = result.insertId;
+
+          // 3. Asociar el acta con el ID real de la ficha
+          db.query(
+            'INSERT INTO acta_has_ficha (acta_id, ficha_id, fecha_subida) VALUES (?, ?, NOW())',
+            [actaId, idFicha],
+            (err3) => {
+              if (err3) {
+                console.error('[Acta-Ficha ERROR]', err3);
+                return res.status(500).json({ mensaje: 'Error al asociar acta con ficha' });
+              }
+
+              res.status(201).json({
+                mensaje: 'Acta subida y asociada a ficha correctamente',
+                actaId,
+                url,
+              });
+            }
+          );
+        }
+      );
+    });
   }
 );
 
-// ── 3) Listar actas por ficha y rango de fechas, mostrando nombre y apellido del instructor
-// GET /api/acta?ficha=282505&startDate=YYYY-MM-DD&endDate=YYYY-MM-DD
-router.get('/', authMiddleware, (req, res) => {
-  const { ficha, startDate, endDate } = req.query;
-  let sql = `
-    SELECT 
-      a.id_acta,
-      a.anexos,
-      CONCAT(u.nombre, ' ', u.apellido) AS instructor,
-      f.numero                         AS ficha_numero,
-      ahf.fecha_subida
-    FROM acta a
-    JOIN usuario u
-      ON u.id_usuario = a.usuario_id
-    JOIN acta_has_ficha ahf
-      ON ahf.acta_id  = a.id_acta
-    JOIN ficha f
-      ON f.id_ficha   = ahf.ficha_id
-    WHERE 1=1
-  `;
-  const params = [];
-
-  if (ficha) {
-    sql += ' AND f.numero = ?';
-    params.push(ficha);
-  }
-  if (startDate) {
-    sql += ' AND ahf.fecha_subida >= ?';
-    params.push(startDate);
-  }
-  if (endDate) {
-    sql += ' AND ahf.fecha_subida <= ?';
-    params.push(endDate);
-  }
-
-  sql += ' ORDER BY ahf.fecha_subida DESC';
-
-  db.query(sql, params, (err, rows) => {
-    if (err) {
-      console.error('[Listar Actas ERROR]', err);
-      return res.status(500).json({ mensaje: 'Error al recuperar actas' });
-    }
-    res.json(rows);
-  });
-});
-
 module.exports = router;
-  
