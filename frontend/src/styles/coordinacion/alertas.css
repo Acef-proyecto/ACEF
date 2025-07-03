@@ -112,7 +112,7 @@ html, body {
 }
 
 .alertas-formulario {
-  background-color: var(--beige-claro);
+  background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;

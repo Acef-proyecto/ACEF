@@ -145,7 +145,7 @@ html, body {
   min-width: 700px;
   border-collapse: collapse;
   margin-top: 10px;
-  background-color: var(--beige-claro);
+  background-color: white;
   box-shadow: var(--sombra-suave);
   border-radius: 6px;
 }
