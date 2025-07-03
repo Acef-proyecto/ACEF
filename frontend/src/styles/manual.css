@@ -1,0 +1,116 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f4f8;
+  color: #333;
+  margin: 0;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 1000px;
+  margin: auto;
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  text-align: center;
+  font-size: 2.2em;
+  margin-bottom: 10px;
+  color: #004880;
+}
+
+h2 {
+  margin-top: 40px;
+  border-bottom: 2px solid #004880;
+  padding-bottom: 8px;
+  color: #004880;
+}
+
+h3 {
+  margin-top: 25px;
+  font-size: 1.2em;
+  color: #004880;
+}
+
+p {
+  margin: 12px 0;
+}
+
+ul,
+ol {
+  margin-left: 20px;
+  margin-bottom: 16px;
+}
+
+li {
+  margin: 6px 0;
+}
+
+.authors,
+.project-info {
+  text-align: center;
+  font-size: 0.95em;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.version-info {
+  text-align: right;
+  font-size: 0.85em;
+  color: #999;
+  margin-bottom: 30px;
+}
+
+.note {
+  background-color: #e8f3ff;
+  border-left: 5px solid #0077cc;
+  padding: 15px 20px;
+  margin-top: 20px;
+  border-radius: 6px;
+}
+
+.example-screen {
+  font-style: italic;
+  color: #555;
+  margin-top: 10px;
+}
+
+.manual-img {
+  width: 100%;
+  max-width: 800px;
+  margin: 10px auto 25px;
+  display: block;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+th,
+td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f0f0f0;
+}
+
+dl dt {
+  font-weight: bold;
+  margin-top: 12px;
+  color: #004880;
+}
+
+dl dd {
+  margin-left: 20px;
+  margin-bottom: 10px;
+}
