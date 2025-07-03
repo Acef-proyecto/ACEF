@@ -3,7 +3,10 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { FaSearch } from 'react-icons/fa';
 import "../../styles/instructor/subir.css";
-import { subirArchivoActa } from "../../services/subirService";
+import {
+  subirArchivoActa,
+  buscarFichaIdPorNumero
+} from "../../services/subirService";
 
 export default function SubirActa({ actaRef, onClose, setIdActa }) {
   const [fichaId, setFichaId] = useState('');
@@ -15,11 +18,19 @@ export default function SubirActa({ actaRef, onClose, setIdActa }) {
         return;
       }
 
-      // 1. Captura el contenido del acta como imagen
+      // 1. Buscar el ID real de la ficha
+      const fichaRealId = await buscarFichaIdPorNumero(fichaId);
+
+      if (!fichaRealId) {
+        alert("Ficha no encontrada en la base de datos.");
+        return;
+      }
+
+      // 2. Captura el contenido del acta como imagen
       const canvas = await html2canvas(actaRef.current, { scale: 2 });
       const imgData = canvas.toDataURL('image/png');
 
-      // 2. Genera PDF a partir del canvas
+      // 3. Genera PDF
       const pdf = new jsPDF('p', 'mm', 'a4');
       const margin = 2;
       const pdfPageWidth = pdf.internal.pageSize.getWidth();
@@ -35,14 +46,14 @@ export default function SubirActa({ actaRef, onClose, setIdActa }) {
         position += pdfPageHeight;
       }
 
-      // 3. Convierte el PDF en blob y luego en File
+      // 4. Convierte PDF en blob
       const blob = pdf.output('blob');
       const pdfFile = new File([blob], `acta_${Date.now()}.pdf`, {
         type: 'application/pdf',
       });
 
-      // 4. Sube el archivo al backend
-      const subida = await subirArchivoActa(pdfFile, fichaId);
+      // 5. Sube el archivo con ficha_id real
+      const subida = await subirArchivoActa(pdfFile, fichaRealId);
       const { actaId, url } = subida;
 
       if (!url || !actaId) {

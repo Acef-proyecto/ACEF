@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { compartirActa } from '../../services/compartirService'; // 👈 Asegúrate de tener esta ruta bien
+import { compartirActa } from '../../services/compartirService';
 import "../../styles/instructor/compartir.css";
 
 export default function CompartirCorreo({ onClose, idActa }) {
@@ -18,7 +18,7 @@ export default function CompartirCorreo({ onClose, idActa }) {
       setMensaje('');
       const token = localStorage.getItem('token');
 
-      await compartirActa(idActa, correo, token); // 👈 llamada corregida
+      await compartirActa({ id_acta: idActa, correo_destino: correo }, token);
 
       setMensaje('✅ Acta compartida exitosamente.');
     } catch (error) {

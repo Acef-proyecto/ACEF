@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-// 🔗 URL base del backend para actas (ajusta para producción si es necesario)
+// 🔗 URL base del backend para actas
 const API_BASE = 'http://localhost:3000/api/acta';
+const FICHA_API = 'http://localhost:3000/api/ficha';
 
 // 📤 Subir un archivo PDF y asociarlo a una ficha
 export const subirArchivoActa = async (file, fichaId) => {
@@ -37,5 +38,16 @@ export const guardarURLActa = async (url) => {
   } catch (error) {
     console.error('❌ Error al guardar URL del acta:', error);
     throw error.response?.data || { mensaje: 'Error al guardar la URL del acta.' };
+  }
+};
+
+// 🔍 Buscar el ID real de una ficha dado su número
+export const buscarFichaIdPorNumero = async (numeroFicha) => {
+  try {
+    const response = await axios.get(`${FICHA_API}/buscar?numero=${numeroFicha}`);
+    return response.data?.id_ficha || null;
+  } catch (error) {
+    console.error('❌ Error al buscar ficha:', error);
+    return null;
   }
 };

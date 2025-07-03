@@ -32,6 +32,7 @@ const asignacionRoutes   = require('./routes/asignacion.routes');
 const trimestreRoutes    = require('./routes/trimestre.routes');
 const competenciasRoutes = require('./routes/competencia.routes');
 const resultadosRoutes   = require('./routes/resultados.routes');
+const fichaRoutes = require('./routes/ficha.routes');
 
 // ── Montar rutas
 app.use("/api/auth",         authRoutes);
@@ -44,6 +45,7 @@ app.use("/api/asignacion",   asignacionRoutes);
 app.use("/api/trimestre",    trimestreRoutes);
 app.use("/api/competencias", competenciasRoutes);
 app.use("/api/resultados",   resultadosRoutes);
+app.use('/api/ficha', fichaRoutes);
 
 // ── Servir cliente y archivos públicos
 app.use("/src", express.static(path.join(__dirname, "..", "src")));
