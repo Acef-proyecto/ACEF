@@ -328,3 +328,24 @@ html, body {
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
+.mensaje-global {
+  text-align: center;
+  padding: 10px;
+  margin: 10px auto;
+  border-radius: 8px;
+  width: 60%;
+  font-weight: bold;
+}
+
+.mensaje-global.exito {
+  background-color: #e0f9e0;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.mensaje-global.error {
+  background-color: #fdecea;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}

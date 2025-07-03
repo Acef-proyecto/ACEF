@@ -29,6 +29,8 @@ const usuarioRoutes    = require("./routes/usuario.routes");
 const alertaRoutes = require('./routes/alerta.routes');
 const asignacionRoutes = require('./routes/asignacion.routes');
 const trimestreRoutes = require('./routes/trimestre.routes');
+const competenciasRoutes = require('./routes/competencia.routes');
+const resultadosRoutes = require('./routes/resultados.routes');
 
 // ── Montar rutas
 app.use("/api/auth",    authRoutes);
@@ -39,6 +41,8 @@ app.use("/api/usuario", usuarioRoutes);
 app.use('/api/alertas', alertaRoutes);
 app.use('/api/asignacion', asignacionRoutes);
 app.use('/api/trimestre', trimestreRoutes);
+app.use('/api/competencias', competenciasRoutes);
+app.use('/api/resultados', resultadosRoutes);
 
 // ── Formulario de reseteo (ahora desde /public/forgot-password.html)
 app.get("/reset-password/:token", (req, res) =>

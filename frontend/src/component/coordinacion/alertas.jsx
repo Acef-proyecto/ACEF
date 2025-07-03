@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaSignOutAlt, FaBook, FaArrowLeft } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import "../../styles/coordinacion/alertas.css";
 import { useNavigate } from 'react-router-dom';
+import Asignar from "../coordinacion/asignar";
 
 const Alertas = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -12,32 +13,41 @@ const Alertas = () => {
   const [finTrimestre, setFinTrimestre] = useState('');
   const [paraTodos, setParaTodos] = useState(false);
   const [mostrarVentana, setMostrarVentana] = useState(false);
-
-  const [resultadoSeleccionado, setResultadoSeleccionado] = useState('');
-  const resultadosAprendizaje = [
-    'RA 1: Interpretar normas técnicas',
-    'RA 2: Aplicar procesos de calidad',
-    'RA 3: Evaluar resultados del proceso'
-  ];
+  const [usuarioId, setUsuarioId] = useState(null);
+  const [mensajeGlobal, setMensajeGlobal] = useState('');
+  const [tipoMensaje, setTipoMensaje] = useState(''); // 'exito' o 'error'
 
   const navigate = useNavigate();
 
-  const handleAsignar = () => {
-    if (!resultadoSeleccionado) {
-      alert("Selecciona un resultado de aprendizaje.");
-      return;
+  useEffect(() => {
+    const savedUsuario = localStorage.getItem('usuario');
+    if (savedUsuario) {
+      try {
+        const usuario = JSON.parse(savedUsuario);
+        if (usuario?.id_usuario) {
+          setUsuarioId(usuario.id_usuario);
+        }
+      } catch (error) {
+        console.error("❌ Error al leer el usuario del localStorage:", error);
+      }
     }
-    alert(`Resultado asignado: ${resultadoSeleccionado}`);
-    setMostrarVentana(false);
-    setResultadoSeleccionado('');
-  };
+  }, []);
+
+  useEffect(() => {
+    if (mensajeGlobal) {
+      const timer = setTimeout(() => {
+        setMensajeGlobal('');
+        setTipoMensaje('');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [mensajeGlobal]);
 
   const handleEnviarAlerta = async () => {
     if (!mensaje.trim() || (!paraTodos && !instructor.trim())) {
       alert("Por favor completa todos los campos obligatorios.");
       return;
     }
-
     if (!inicioTrimestre || !finTrimestre) {
       alert("Debes ingresar las fechas del trimestre.");
       return;
@@ -45,29 +55,17 @@ const Alertas = () => {
 
     try {
       if (paraTodos) {
-        const data = {
-          mensaje,
-          fecha_inicio: inicioTrimestre,
-          fecha_fin: finTrimestre
-        };
-        // const res = await enviarAlertaTrimestral(data);
-        alert(`✅ Alerta enviada a todos los instructores.`);
+        alert("✅ Alerta enviada a todos los instructores.");
       } else {
-        const data = {
-          mensaje,
-          correo_instructor: instructor
-        };
-        // const res = await enviarAlertaIndividual(data);
         alert("✅ Alerta enviada al instructor.");
       }
-
       setMensaje('');
       setInstructor('');
       setInicioTrimestre('');
       setFinTrimestre('');
       setParaTodos(false);
     } catch (error) {
-      console.error("Error al enviar la alerta:", error);
+      console.error("❌ Error al enviar la alerta:", error);
       alert("❌ Error al enviar la alerta.");
     }
   };
@@ -75,9 +73,15 @@ const Alertas = () => {
   const handleCheckboxChange = (e) => {
     const checked = e.target.checked;
     setParaTodos(checked);
-    if (checked) {
-      setInstructor('');
-    }
+    if (checked) setInstructor('');
+  };
+
+  const handleCerrarAsignar = () => setMostrarVentana(false);
+  const handleAsignacionExitosa = () => setMostrarVentana(false);
+
+  const mostrarMensaje = (texto, tipo) => {
+    setMensajeGlobal(texto);
+    setTipoMensaje(tipo); // 'exito' o 'error'
   };
 
   return (
@@ -87,24 +91,13 @@ const Alertas = () => {
         {menuOpen && (
           <div className="menu">
             <button onClick={() => navigate('/')}>
-              <FaSignOutAlt style={{ marginRight: "8px" }} />
-              Cerrar sesión
+              <FaSignOutAlt style={{ marginRight: "8px" }} /> Cerrar sesión
             </button>
             <button>
-              <a
-  href="/manual.html"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="menu-link"
-  style={{ display: "flex", alignItems: "center", padding: "10px", textDecoration: "none", color: "inherit" }}
->
-  <FaBook style={{ marginRight: "8px" }} />Manual
-</a>
-
+              <FaBook style={{ marginRight: "8px" }} /> Manual
             </button>
             <button onClick={() => navigate('/coordinacion/inicio')}>
-              <FaArrowLeft style={{ marginRight: "8px" }} />
-              Volver
+              <FaArrowLeft style={{ marginRight: "8px" }} /> Volver
             </button>
           </div>
         )}
@@ -112,6 +105,13 @@ const Alertas = () => {
           <img src={logo} alt="Logo ACEF" className="logo-img" />
         </div>
       </header>
+
+      {/* ✅ Mensaje de estado */}
+      {mensajeGlobal && (
+        <div className={`mensaje-global ${tipoMensaje}`}>
+          {mensajeGlobal}
+        </div>
+      )}
 
       <div className="contenido alertas-formulario">
         <table className="alerta-tabla">
@@ -145,16 +145,26 @@ const Alertas = () => {
                     type="checkbox"
                     checked={paraTodos}
                     onChange={handleCheckboxChange}
-                  />
-                  Todos
+                  /> Todos
                 </label>
+                {!paraTodos && (
+                  <div style={{ marginTop: "8px" }}>
+                    <button
+                      className="btn-verde-asignar"
+                      onClick={() => {
+                        if (!instructor.trim()) {
+                          alert("Debe ingresar el correo del instructor.");
+                          return;
+                        }
+                        mostrarMensaje("Abriendo ventana de asignación...", "exito");
+                        setMostrarVentana(true);
+                      }}
+                    >
+                      Asignar R.A
+                    </button>
+                  </div>
+                )}
               </td>
-              <button
-                className="btn-verde-asignar"
-                onClick={() => setMostrarVentana(true)}
-              >
-                Asignar R.A
-              </button>
             </tr>
           </tbody>
         </table>
@@ -168,7 +178,6 @@ const Alertas = () => {
               onChange={(e) => setInicioTrimestre(e.target.value)}
             />
           </div>
-
           <div className="campo-fecha">
             <label>Fin Trimestre</label>
             <input
@@ -177,40 +186,20 @@ const Alertas = () => {
               onChange={(e) => setFinTrimestre(e.target.value)}
             />
           </div>
-
           <button className="btn-verde" onClick={handleEnviarAlerta}>
             Enviar Alerta
           </button>
         </div>
-
-        {/* Modal para asignar R.A */}
-        {mostrarVentana && (
-          <div className="modal-ventana" role="dialog" aria-modal="true">
-            <div className="modal-contenido">
-              <p><strong><em>Seleccione los Resultados de aprendizaje que el instructor va a calificar</em></strong></p>
-
-              <div className="modal-content">
-                <label className="modal-label">R.A</label>
-                <select
-                  className="modal-select"
-                  value={resultadoSeleccionado}
-                  onChange={(e) => setResultadoSeleccionado(e.target.value)}
-                >
-                  <option value="">Seleccione...</option>
-                  {resultadosAprendizaje.map((ra, index) => (
-                    <option key={index} value={ra}>{ra}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="modal-buttons">
-                <button onClick={handleAsignar} className="modal-button">Asignar</button>
-                <button onClick={() => setMostrarVentana(false)} className="btn-cerrar">Cancelar</button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Modal de asignación */}
+      <Asignar
+        visible={mostrarVentana}
+        onClose={handleCerrarAsignar}
+        onAsignar={handleAsignacionExitosa}
+        correoInstructor={instructor}
+        setMensajeGlobal={(texto) => mostrarMensaje(texto, texto.startsWith("✅") ? "exito" : "error")}
+      />
     </div>
   );
 };
