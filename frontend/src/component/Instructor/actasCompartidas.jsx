@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { obtenerActasCompartidas } from '../../services/compartirService';
 import "../../styles/Instructor/actasCompartidas.css";
 
 export default function ListaActas({ onClose }) {

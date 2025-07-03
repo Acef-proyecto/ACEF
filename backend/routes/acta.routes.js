@@ -125,4 +125,7 @@ router.get('/', authMiddleware, (req, res) => {
 // ✅ NUEVA RUTA PARA COMPARTIR ACTA
 router.post('/compartir', authMiddleware, actaController.compartirActa);
 
+// ✅ NUEVA RUTA PARA OBTENER ACTAS COMPARTIDAS
+router.get('/compartidas', authMiddleware, actaController.obtenerActasCompartidas);
+
 module.exports = router;

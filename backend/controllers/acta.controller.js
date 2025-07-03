@@ -84,21 +84,38 @@ exports.obtenerActasCompartidas = (req, res) => {
     return res.status(400).json({ mensaje: "ID del usuario no disponible en la sesión." });
   }
 
-  const sql = `
-    SELECT ac.id, ac.id_acta, a.anexos, ac.fecha_envio, u.nombre AS compartido_por
-    FROM actas_compartidas ac
-    JOIN acta a ON ac.id_acta = a.id_acta
-    JOIN usuario u ON ac.compartido_por = u.id_usuario
-    WHERE ac.receptor_id = ?
-    ORDER BY ac.fecha_envio DESC
-  `;
+  // Primero, buscamos el correo usando el ID del usuario
+  const buscarCorreo = 'SELECT correo FROM usuario WHERE id_usuario = ?';
 
-  db.query(sql, [id_usuario], (err, rows) => {
+  db.query(buscarCorreo, [id_usuario], (err, resultado) => {
     if (err) {
-      console.error("❌ Error al obtener actas compartidas:", err);
-      return res.status(500).json({ mensaje: "Error al obtener actas compartidas." });
+      console.error("❌ Error al buscar el correo del usuario:", err);
+      return res.status(500).json({ mensaje: "Error al obtener el correo del usuario." });
     }
 
-    res.status(200).json(rows);
+    if (resultado.length === 0) {
+      return res.status(404).json({ mensaje: "Usuario no encontrado." });
+    }
+
+    const correo = resultado[0].correo;
+
+    // Luego, usamos ese correo en la consulta principal
+    const sql = `
+      SELECT ac.id, ac.id_acta, a.anexos, ac.fecha_envio, u.nombre AS compartido_por
+      FROM actas_compartidas ac
+      JOIN acta a ON ac.id_acta = a.id_acta
+      JOIN usuario u ON ac.compartido_por = u.id_usuario
+      WHERE ac.correo_destino = ?
+      ORDER BY ac.fecha_envio DESC
+    `;
+
+    db.query(sql, [correo], (err, rows) => {
+      if (err) {
+        console.error("❌ Error al obtener actas compartidas:", err);
+        return res.status(500).json({ mensaje: "Error al obtener actas compartidas." });
+      }
+
+      res.status(200).json(rows);
+    });
   });
 };
