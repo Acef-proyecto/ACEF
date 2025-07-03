@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { compartirActa } from "../../services/actasService";
+import { compartirActa } from '../../services/compartirService'; // 👈 Asegúrate de tener esta ruta bien
 import "../../styles/instructor/compartir.css";
 
 export default function CompartirCorreo({ onClose, idActa }) {
@@ -18,16 +18,13 @@ export default function CompartirCorreo({ onClose, idActa }) {
       setMensaje('');
       const token = localStorage.getItem('token');
 
-      await compartirActa({
-        id_acta: idActa,
-        correo_destino: correo,
-        token
-      });
+      await compartirActa(idActa, correo, token); // 👈 llamada corregida
 
       setMensaje('✅ Acta compartida exitosamente.');
     } catch (error) {
       console.error(error);
-      setMensaje(`❌ Error: ${error?.message || 'No se pudo compartir el acta.'}`);
+      const errorMsg = error.response?.data?.mensaje || 'No se pudo compartir el acta.';
+      setMensaje(`❌ Error: ${errorMsg}`);
     } finally {
       setEnviando(false);
     }
@@ -37,8 +34,6 @@ export default function CompartirCorreo({ onClose, idActa }) {
     <div className="modal-overlay">
       <div className="modal-contenido">
         <div className="modal-body">
-
-          {/* Encabezado con instrucción y botón de cerrar */}
           <div className="instruccion-con-cierre">
             <p className="instruccion">
               <em>Ingrese el correo del instructor con quien desea compartir el acta:</em>
@@ -46,7 +41,6 @@ export default function CompartirCorreo({ onClose, idActa }) {
             <button className="cerrar-modal" onClick={onClose}>✕</button>
           </div>
 
-          {/* Campo para el correo */}
           <div className="input-grupo">
             <label className="etiqueta">Correo del instructor</label>
             <input

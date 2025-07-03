@@ -172,6 +172,10 @@ const Acta = () => {
             <button className="boton-verde" onClick={handleDownloadPDF}>
               Descargar
             </button>
+
+            <button className="boton-verde">
+              Firma
+            </button>
           </div>
         </aside>
 

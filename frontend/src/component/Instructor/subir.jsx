@@ -3,7 +3,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { FaSearch } from 'react-icons/fa';
 import "../../styles/instructor/subir.css";
-import { subirArchivoActa } from "../../services/actasService";
+import { subirArchivoActa } from "../../services/subirService";
 
 export default function SubirActa({ actaRef, onClose, setIdActa }) {
   const [fichaId, setFichaId] = useState('');
