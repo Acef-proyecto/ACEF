@@ -284,3 +284,12 @@ footer {
   padding: 20px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
+
+.firma-flotante {
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.2s ease;
+}
+
+.firma-flotante:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}

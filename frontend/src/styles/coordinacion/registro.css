@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@1,300&display=swap');
 
+registro.css
+
 :root {
   --verde-principal: #01AF00;
   --azul-oscuro: #00324C;
@@ -179,6 +181,39 @@ html, body {
   color: var(--verde-principal);
 }
 
+/* Contenedor de contraseña con ojito */
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-container .form-input {
+  padding-right: 45px;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6c757d;
+  font-size: 1.1rem;
+  padding: 4px;
+  transition: color 0.2s ease;
+  z-index: 10;
+}
+
+.password-toggle-btn:hover {
+  color: var(--verde-principal);
+}
+
+.password-toggle-btn:focus {
+  outline: none;
+  color: var(--verde-principal);
+}
+
 .form-input {
   width: 100%;
   padding: 12px 16px;
@@ -208,6 +243,81 @@ html, body {
   font-size: 0.875rem;
   margin-top: 5px;
   display: block;
+}
+
+/* Estilos para errores múltiples */
+.error-message .error-item {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.error-message .error-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Estilos para requisitos de contraseña */
+.password-requirements {
+  margin-top: 10px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border-left: 4px solid var(--verde-principal);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.requirements-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--azul-oscuro);
+  margin: 0 0 8px 0;
+}
+
+.requirement {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  font-size: 0.85rem;
+}
+
+.requirement:last-child {
+  margin-bottom: 0;
+}
+
+.requirement-icon {
+  margin-right: 8px;
+  font-weight: bold;
+  width: 16px;
+  text-align: center;
+}
+
+.requirement.valid .requirement-icon {
+  color: #28a745;
+}
+
+.requirement.invalid .requirement-icon {
+  color: #dc3545;
+}
+
+.requirement.valid .requirement-text {
+  color: #28a745;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.requirement.invalid .requirement-text {
+  color: #6c757d;
+}
+
+/* Animación para mostrar/ocultar requisitos */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .form-actions {
@@ -271,5 +381,17 @@ html, body {
   
   .btn-primary, .btn-secondary {
     width: 100%;
+  }
+  
+  .password-requirements {
+    padding: 10px;
+  }
+  
+  .requirements-title {
+    font-size: 0.85rem;
+  }
+  
+  .requirement {
+    font-size: 0.8rem;
   }
 }

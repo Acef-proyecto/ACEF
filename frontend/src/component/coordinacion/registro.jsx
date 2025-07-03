@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaSignOutAlt, FaBook, FaArrowLeft, FaUser, FaEnvelope, FaPhone, FaUserTag, FaLock } from "react-icons/fa";
+import { FaSignOutAlt, FaBook, FaArrowLeft, FaUser, FaEnvelope, FaPhone, FaUserTag, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import "../../styles/coordinacion/registro.css";
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,8 @@ import { registrarUsuario } from '../../services/registroService';
 
 const Registro = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     rol: '',
     nombre: '',
@@ -25,6 +27,48 @@ const Registro = () => {
     { value: 'coordinador', label: 'Coordinador' },
     { value: 'instructor', label: 'Instructor' },
   ];
+
+  const validatePassword = (password) => {
+    const errors = [];
+    
+    if (password.length < 8) {
+      errors.push('Debe tener mínimo 8 caracteres');
+    }
+    
+    if (password.length > 15) {
+      errors.push('Debe tener máximo 15 caracteres');
+    }
+    
+    if (!/[A-Z]/.test(password)) {
+      errors.push('Debe contener al menos una letra mayúscula');
+    }
+    
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      errors.push('Debe contener al menos un carácter especial');
+    }
+    
+    return errors;
+  };
+
+  const PasswordRequirements = ({ password }) => {
+    const requirements = [
+      { text: '8-15 caracteres', valid: password.length >= 8 && password.length <= 15 },
+      { text: 'Una letra mayúscula', valid: /[A-Z]/.test(password) },
+      { text: 'Un carácter especial', valid: /[!@#$%^&*(),.?":{}|<>]/.test(password) }
+    ];
+
+    return (
+      <div className="password-requirements">
+        <p className="requirements-title">Requisitos de contraseña:</p>
+        {requirements.map((req, index) => (
+          <div key={index} className={`requirement ${req.valid ? 'valid' : 'invalid'}`}>
+            <span className="requirement-icon">{req.valid ? '✓' : '✗'}</span>
+            <span className="requirement-text">{req.text}</span>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -51,8 +95,16 @@ const Registro = () => {
     else if (!/^\d{10}$/.test(formData.numero)) newErrors.numero = 'Debe tener 10 dígitos';
     if (!formData.correo.trim()) newErrors.correo = 'El correo es requerido';
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.correo)) newErrors.correo = 'Formato inválido';
-    if (!formData.contraseña.trim()) newErrors.contraseña = 'La contraseña es requerida';
-    else if (formData.contraseña.length < 6) newErrors.contraseña = 'Debe tener mínimo 6 caracteres';
+    
+    // Validación de contraseña mejorada
+    if (!formData.contraseña.trim()) {
+      newErrors.contraseña = 'La contraseña es requerida';
+    } else {
+      const passwordErrors = validatePassword(formData.contraseña);
+      if (passwordErrors.length > 0) {
+        newErrors.contraseña = passwordErrors;
+      }
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -91,6 +143,8 @@ const Registro = () => {
       contraseña: ''
     });
     setErrors({});
+    setShowPasswordRequirements(false);
+    setShowPassword(false);
   };
 
   return (
@@ -105,15 +159,14 @@ const Registro = () => {
             </button>
             <button>
               <a
-  href="/manual.html"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="menu-link"
-  style={{ display: "flex", alignItems: "center", padding: "10px", textDecoration: "none", color: "inherit" }}
->
-  <FaBook style={{ marginRight: "8px" }} />Manual
-</a>
-
+                href="/manual.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="menu-link"
+                style={{ display: "flex", alignItems: "center", padding: "10px", textDecoration: "none", color: "inherit" }}
+              >
+                <FaBook style={{ marginRight: "8px" }} />Manual
+              </a>
             </button>
             <button onClick={() => navigate('/coordinacion/inicio')}>
               <FaArrowLeft style={{ marginRight: "8px" }} />
@@ -264,15 +317,39 @@ const Registro = () => {
                 <FaLock className="input-icon" />
                 Contraseña *
               </label>
-              <input
-                type="password"
-                id="contraseña"
-                name="contraseña"
-                value={formData.contraseña}
-                onChange={handleInputChange}
-                className={`form-input ${errors.contraseña ? 'error' : ''}`}
-              />
-              {errors.contraseña && <span className="error-message">{errors.contraseña}</span>}
+              <div className="password-input-container">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="contraseña"
+                  name="contraseña"
+                  value={formData.contraseña}
+                  onChange={handleInputChange}
+                  onFocus={() => setShowPasswordRequirements(true)}
+                  onBlur={() => setShowPasswordRequirements(false)}
+                  className={`form-input ${errors.contraseña ? 'error' : ''}`}
+                  maxLength="15"
+                />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+              {errors.contraseña && (
+                <div className="error-message">
+                  {Array.isArray(errors.contraseña) 
+                    ? errors.contraseña.map((error, index) => (
+                        <span key={index} className="error-item">• {error}</span>
+                      ))
+                    : errors.contraseña
+                  }
+                </div>
+              )}
+              {(showPasswordRequirements || formData.contraseña) && (
+                <PasswordRequirements password={formData.contraseña} />
+              )}
             </div>
 
             {/* Botones */}

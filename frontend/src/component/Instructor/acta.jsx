@@ -9,7 +9,7 @@ import CompartirCorreo from "../Instructor/compartir";
 import ListaActas from "../Instructor/actasCompartidas";
 import { useNavigate } from 'react-router-dom';
 
-// === Funciones auxiliares ===
+// Utilidades auxiliares
 function obtenerTrimestreYAnio() {
   const fecha = new Date();
   const trimestre = ["I", "II", "III", "IV"][Math.floor(fecha.getMonth() / 3)];
@@ -66,7 +66,6 @@ function verificarUltimaFila(input, tablaId) {
   }
 }
 
-// === Componente principal ===
 const Acta = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [htmlContent, setHtmlContent] = useState("");
@@ -76,6 +75,13 @@ const Acta = () => {
   const [idActa, setIdActa] = useState(null);
   const actaRef = useRef(null);
   const navigate = useNavigate();
+  const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+  // Firma
+  const [firmaURL, setFirmaURL] = useState(null);
+  const [firmaPos, setFirmaPos] = useState({ x: 100, y: 100 });
+  const [arrastrando, setArrastrando] = useState(false);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     fetch('/acta/acta.html')
@@ -96,6 +102,26 @@ const Acta = () => {
       if (t3 && !t3.children.length) crearFilaEvaluacion(t3);
     }, 0);
   }, [htmlContent]);
+
+  useEffect(() => {
+    const moverFirma = (e) => {
+      if (arrastrando) {
+        setFirmaPos({
+          x: e.clientX - offset.x,
+          y: e.clientY - offset.y,
+        });
+      }
+    };
+    const soltarFirma = () => {
+      if (arrastrando) setArrastrando(false);
+    };
+    window.addEventListener("mousemove", moverFirma);
+    window.addEventListener("mouseup", soltarFirma);
+    return () => {
+      window.removeEventListener("mousemove", moverFirma);
+      window.removeEventListener("mouseup", soltarFirma);
+    };
+  }, [arrastrando, offset]);
 
   const handleDownloadPDF = () => {
     const input = actaRef.current;
@@ -118,6 +144,37 @@ const Acta = () => {
 
       pdf.save("acta.pdf");
     }).catch(err => console.error("Error al generar PDF:", err));
+  };
+
+  const handleSubirFirma = async (e) => {
+    const archivo = e.target.files[0];
+    if (!archivo || !usuario?.id) {
+      alert("Error: Usuario no válido o archivo no seleccionado.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("firma", archivo);
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/firma/subir/${usuario.id}`, {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Firma subida correctamente.");
+        const urlTemporal = URL.createObjectURL(archivo);
+        setFirmaURL(urlTemporal);
+      } else {
+        alert("Error al subir la firma: " + data.error);
+      }
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
+      alert("Error al conectar con el servidor.");
+    }
   };
 
   return (
@@ -172,9 +229,15 @@ const Acta = () => {
               Descargar
             </button>
 
-            <button className="boton-verde">
-              Firma
-            </button>
+            <label className="boton-verde">
+              Subir firma
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleSubirFirma}
+                style={{ display: "none" }}
+              />
+            </label>
           </div>
         </aside>
 
@@ -185,7 +248,29 @@ const Acta = () => {
             dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
 
-          {/* ✅ Subir Acta con setIdActa y auto abrir compartir */}
+          {firmaURL && (
+            <img
+              src={firmaURL}
+              alt="Firma"
+              className="firma-flotante"
+              style={{
+                position: "absolute",
+                top: firmaPos.y,
+                left: firmaPos.x,
+                width: "150px",
+                cursor: "move",
+                zIndex: 1000,
+              }}
+              onMouseDown={(e) => {
+                setArrastrando(true);
+                setOffset({
+                  x: e.clientX - firmaPos.x,
+                  y: e.clientY - firmaPos.y,
+                });
+              }}
+            />
+          )}
+
           {modalAbierto && (
             <SubirActa
               actaRef={actaRef}
@@ -193,12 +278,11 @@ const Acta = () => {
               setIdActa={(id) => {
                 setIdActa(id);
                 setModalAbierto(false);
-                setModalCompartirAbierto(true); // 👉 abrir compartir automáticamente
+                setModalCompartirAbierto(true);
               }}
             />
           )}
 
-          {/* ✅ idActa corregido (minúscula) */}
           {modalCompartirAbierto && (
             <CompartirCorreo
               idActa={idActa}
