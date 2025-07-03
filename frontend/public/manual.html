@@ -1,348 +1,280 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manual de Usuario - Aplicación de Control y Evolución Formativa (ACEF)</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        .container {
-            max-width: 900px;
-            margin: auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h1, h2, h3, h4 {
-            color: #0056b3;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        section {
-            margin-bottom: 30px;
-        }
-        ul {
-            list-style-type: disc;
-            margin-left: 20px;
-        }
-        ol {
-            list-style-type: decimal;
-            margin-left: 20px;
-        }
-        .authors, .project-info {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 0.9em;
-            color: #666;
-        }
-        .authors p, .project-info p {
-            margin: 5px 0;
-        }
-        .version-info {
-            text-align: right;
-            margin-bottom: 20px;
-            font-size: 0.8em;
-            color: #888;
-        }
-        .example-screen {
-            font-style: italic;
-            color: #555;
-            margin-top: 10px;
-        }
-        .note {
-            background-color: #e6f7ff;
-            border-left: 4px solid #007bff;
-            padding: 10px;
-            margin: 20px 0;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manual de Usuario - ACEF</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f4f8;
+      color: #333;
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    h1, h2, h3, h4 {
+      color: #004880;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.2em;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin-top: 40px;
+      border-bottom: 2px solid #004880;
+      padding-bottom: 8px;
+    }
+
+    h3 {
+      margin-top: 25px;
+      font-size: 1.2em;
+    }
+
+    p {
+      margin: 12px 0;
+    }
+
+    ul, ol {
+      margin-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    .authors, .project-info {
+      text-align: center;
+      font-size: 0.95em;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .version-info {
+      text-align: right;
+      font-size: 0.85em;
+      color: #999;
+      margin-bottom: 30px;
+    }
+
+    .note {
+      background-color: #e8f3ff;
+      border-left: 5px solid #0077cc;
+      padding: 15px 20px;
+      margin-top: 20px;
+      border-radius: 6px;
+    }
+
+    .example-screen {
+      font-style: italic;
+      color: #555;
+      margin-top: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f0f0f0;
+    }
+
+    dl dt {
+      font-weight: bold;
+      margin-top: 12px;
+    }
+
+    dl dd {
+      margin-left: 20px;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        [cite_start]<h1>Manual de Usuario — Aplicación de control y evolución formativa (ACEF) [cite: 1]</h1>
+  <div class="container">
+    <h1>Manual de Usuario – ACEF</h1>
 
-        <div class="authors">
-            [cite_start]<p>Laura Liseth Buitrago Castillo [cite: 2]</p>
-            [cite_start]<p>Leslye Marcela Buitrago Mora [cite: 3]</p>
-            [cite_start]<p>Samuel Andrés Torres Romero [cite: 4]</p>
-            [cite_start]<p>David Santiago Rubiano Hernández [cite: 5]</p>
-        </div>
-
-        <div class="project-info">
-            [cite_start]<p>Centro de Gestión de Mercados, Logística y Tecnologías de la Información- Sena [cite: 6]</p>
-            [cite_start]<p>2826505 – Análisis y Desarrollo de Software [cite: 7]</p>
-        </div>
-
-        <div class="version-info">
-            [cite_start]<p>VERSION 1 [cite: 8]</p>
-            [cite_start]<p>21 de mayo – 2025 [cite: 9]</p>
-        </div>
-
-        <section>
-            <h2>1. [cite_start]Introducción [cite: 10]</h2>
-            [cite_start]<p>La gestión educativa en el SENA demanda herramientas eficientes para optimizar procesos y garantizar la calidad de la formación. [cite: 11] [cite_start]Un software especializado permitiría centralizar la información sobre fichas de formación, competencias, contenidos y resultados de aprendizaje. [cite: 12] [cite_start]Esta solución facilitaría la creación y seguimiento de programas, la evaluación del desempeño de los aprendices y la generación de informes detallados. [cite: 13] [cite_start]Además, al automatizar tareas y mejorar la comunicación, se optimizaría el tiempo de los coordinadores y se fortalecería la toma de decisiones basadas en datos. [cite: 14] [cite_start]En definitiva, esta herramienta se convertiría en un aliado estratégico para el SENA, contribuyendo a mejorar la eficiencia y la eficacia de sus procesos formativos. [cite: 15]</p>
-        </section>
-
-        <section>
-            <h2>2. [cite_start]Objetivo del Sistema [cite: 16]</h2>
-            [cite_start]<p>Desarrollar un software especializado que centralice y optimice la gestión educativa del SENA, facilitando el seguimiento de programas, evaluación de aprendices y toma de decisiones basada en datos. [cite: 17]</p>
-        </section>
-
-        <section>
-            <h2>3. [cite_start]Público Objetivo [cite: 18]</h2>
-            <ul>
-                [cite_start]<li>Instructores [cite: 19]</li>
-                [cite_start]<li>Coordinadores académicos [cite: 20]</li>
-                [cite_start]<li>Administradores del sistema [cite: 21]</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>4. [cite_start]Requisitos del Sistema [cite: 22]</h2>
-            <ul>
-                [cite_start]<li>Navegador compatible: Google Chrome, Mozilla Firefox [cite: 23]</li>
-                [cite_start]<li>Conexión a internet [cite: 24]</li>
-                [cite_start]<li>Usuario y contraseña institucional [cite: 25]</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>5. [cite_start]Ingreso al Sistema [cite: 26]</h2>
-            <ol>
-                [cite_start]<li>Paso 1: Acceda a la URL: `https://actas.institucion.edu` [cite: 27]</li>
-                [cite_start]<li>Paso 2: Ingrese su usuario y contraseña institucional [cite: 28]</li>
-                [cite_start]<li>Paso 3: Presione el botón Iniciar sesión [cite: 29]</li>
-            </ol>
-        </section>
-
-        <section>
-            <h2>6. [cite_start]Módulos y Funcionalidades [cite: 30]</h2>
-
-            <h3>6.1. [cite_start]Módulo de Inicio de Sesión (Instructor, Coordinador) [cite: 31]</h3>
-            [cite_start]<p>Descripción: Permite a los usuarios autenticarse en el sistema mediante un nombre de usuario y contraseña. [cite: 32]</p>
-            <ul>
-                [cite_start]<li>Ingreso de credenciales [cite: 33]</li>
-                [cite_start]<li>Validación de usuario [cite: 34]</li>
-                [cite_start]<li>Recuperación de contraseña (si aplica) [cite: 35]</li>
-            </ul>
-            [cite_start]<p>Accesibilidad: Todos los usuarios deben iniciar sesión para acceder al sistema. [cite: 36]</p>
-            [cite_start]<p class="example-screen">Ejemplo de pantalla: [cite: 37] [imagen aquí]</p>
-
-            <h3>6.2. [cite_start]Módulo de Filtros y Consultas (Coordinador) [cite: 38]</h3>
-            [cite_start]<p>Descripción: Permite buscar y visualizar fichas registradas en el sistema, ya sea por nombre, número de ficha u otros criterios, así mismo consultar si están evaluadas o no. [cite: 39]</p>
-            <ul>
-                [cite_start]<li>Búsqueda de fichas [cite: 40]</li>
-                [cite_start]<li>Visualización de datos asociados [cite: 41]</li>
-            </ul>
-            [cite_start]<p>Accesibilidad: Disponible para usuarios con permisos de consulta (ej. administrativos o coordinadores). [cite: 42]</p>
-            [cite_start]<p class="example-screen">Ejemplo de pantalla: [imagen aquí] [cite: 43]</p>
-
-            <h3>6.3. [cite_start]Módulo de Actas (Instructor) [cite: 44]</h3>
-            <ul>
-                [cite_start]<li>Cargar acta de cierre [cite: 45]</li>
-                [cite_start]<li>Entregar acta para revisión [cite: 46]</li>
-                [cite_start]<li>Consultar estado de sus actas [cite: 47]</li>
-            </ul>
-            [cite_start]<p>Accesibilidad: Permitido a usuarios autorizados (según rol definido por la institución). [cite: 48]</p>
-            [cite_start]<p class="example-screen">Ejemplo de pantalla: [imagen aquí] [cite: 49]</p>
-
-            <h3>6.4. [cite_start]Módulo de Actas (Coordinador) [cite: 50]</h3>
-            <ul>
-                [cite_start]<li>Actualizar plantillas de actas [cite: 51]</li>
-                [cite_start]<li>Visualizar actas subidas por los instructores [cite: 52]</li>
-            </ul>
-            [cite_start]<p>Accesibilidad: Permitido a usuarios autorizados (según rol definido por la institución). [cite: 53]</p>
-            [cite_start]<p class="example-screen">Ejemplo de pantalla: [imagen aquí] [cite: 54]</p>
-
-            <h3>6.5. [cite_start]Módulo de Alertas (Coordinador) [cite: 55]</h3>
-            [cite_start]<p>Descripción: Son las notificaciones de advertencia que se generan por el coordinador para los instructores, avisando el cierre de trimestre con mensaje específico. [cite: 56]</p>
-            <ul>
-                [cite_start]<li>Genera alertas que llegan a los correos de los instructores [cite: 57]</li>
-                [cite_start]<li>Envía alertas al instructor: [cite: 58]
-                    <ul>
-                        [cite_start]<li>7 días antes del cierre [cite: 59]</li>
-                        [cite_start]<li>3 días antes si no entregó acta [cite: 60]</li>
-                        [cite_start]<li>El día del cierre [cite: 61]</li>
-                    </ul>
-                </li>
-            </ul>
-            [cite_start]<p>Accesibilidad: Permitido a usuarios autorizados (según rol definido por la institución). [cite: 62]</p>
-        </section>
-
-        <section>
-            <h2>7. [cite_start]Flujo de Trabajo del Sistema [cite: 63]</h2>
-
-            <h3>7.1. [cite_start]Inicio de Sesión [cite: 64]</h3>
-            [cite_start]<p>Usuario accede al sistema → Ingresa credenciales → Sistema valida → Acceso concedido o denegado [cite: 65]</p>
-            <ul>
-                [cite_start]<li>Si credenciales correctas → Avanza a la pantalla principal [cite: 66]</li>
-                [cite_start]<li>Si credenciales incorrectas → Se muestra mensaje de error [cite: 67]</li>
-            </ul>
-
-            <h3>7.2. [cite_start]Pantalla Principal / Dashboard [cite: 68]</h3>
-            <p>Desde aquí el usuario puede elegir qué módulo utilizar según su rol o necesidad. [cite_start]Opciones disponibles: [cite: 69]</p>
-            <ul>
-                [cite_start]<li>Consultar Fichas [cite: 70]</li>
-                [cite_start]<li>Gestionar Actas [cite: 71]</li>
-                [cite_start]<li>Ver Alertas [cite: 72]</li>
-            </ul>
-
-            <h3>7.3. [cite_start]Consultas de Fichas [cite: 73]</h3>
-            [cite_start]<p>Usuario selecciona “Consultas de Fichas” → Ingreso de criterios de búsqueda → Resultados mostrados [cite: 74]</p>
-            <ul>
-                [cite_start]<li>Buscar por nombre, número, etc. [cite: 75]</li>
-                [cite_start]<li>Seleccionar una ficha específica para ver detalles [cite: 76]</li>
-            </ul>
-
-            <h3>7.4. [cite_start]Gestión de Actas (desde una ficha) [cite: 77]</h3>
-            [cite_start]<p>Desde una ficha consultada y si es individual o general: [cite: 78]</p>
-            <ul>
-                [cite_start]<li>Subir Acta → Seleccionar archivo → Cargar → Confirmar [cite: 79]</li>
-                [cite_start]<li>Descargar Acta → Seleccionar acta disponible → Descargar PDF [cite: 80]</li>
-                [cite_start]<li>Ver historial de actas asociadas a la ficha [cite: 81]</li>
-            </ul>
-
-            <h3>7.5. [cite_start]Alertas [cite: 82]</h3>
-            [cite_start]<p>Usuario selecciona “Alertas” → El sistema muestra notificaciones relevantes [cite: 83]</p>
-            <ul>
-                [cite_start]<li>Alertas de vencimiento, tareas pendientes, observaciones [cite: 84]</li>
-            </ul>
-
-            <h3>7.6. [cite_start]Cierre de Sesión [cite: 85]</h3>
-            [cite_start]<p>Usuario finaliza su sesión → El sistema redirige a pantalla de inicio de sesión [cite: 86]</p>
-        </section>
-
-        <section>
-            <h2>8. [cite_start]Consideraciones de Seguridad [cite: 87]</h2>
-            <ul>
-                [cite_start]<li>No compartir su usuario y contraseña [cite: 88]</li>
-                [cite_start]<li>Cerrar sesión después de usar el sistema [cite: 89]</li>
-                [cite_start]<li>Reportar cualquier inconsistencia al área de soporte [cite: 90]</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>9. [cite_start]Soporte Técnico [cite: 91]</h2>
-            <ul>
-                [cite_start]<li>Correo: `soporte@institucion.edu` [cite: 92]</li>
-                [cite_start]<li>Teléfono: `(+57) 300 123 4567` [cite: 93]</li>
-                [cite_start]<li>Horario de atención: Lunes a viernes, 8:00 a.m. a 5:00 p.m. [cite: 94]</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>10. [cite_start]Glosario [cite: 95]</h2>
-            <dl>
-                <dt>Acta de cierre:</dt>
-                [cite_start]<dd>Documento que registra las notas finales de los estudiantes. [cite: 96]</dd>
-                <dt>Coordinador:</dt>
-                [cite_start]<dd>Responsable de validar actas de cierre. [cite: 97]</dd>
-                <dt>Inicio de Sesión:</dt>
-                [cite_start]<dd>Proceso mediante el cual un usuario accede al sistema utilizando su nombre de usuario y contraseña. [cite: 97]</dd>
-                <dt>Usuario:</dt>
-                [cite_start]<dd>Persona autorizada para utilizar el sistema. [cite: 98]</dd>
-                <dt>Ficha:</dt>
-                [cite_start]<dd>Registro que contiene información relevante sobre el grupo de aprendices. [cite: 98]</dd>
-                <dt>Consulta de Fichas:</dt>
-                [cite_start]<dd>Función para buscar y visualizar las fichas en el sistema. [cite: 99]</dd>
-                <dt>Acta:</dt>
-                [cite_start]<dd>Documento formal que registra el cierre de trimestre. [cite: 100]</dd>
-                <dt>Subir Acta:</dt>
-                [cite_start]<dd>Cargar un archivo de acta desde el dispositivo al sistema. [cite: 101]</dd>
-                <dt>Descargar Acta:</dt>
-                [cite_start]<dd>Obtener una copia de un acta guardada en el sistema. [cite: 102]</dd>
-                <dt>Alerta:</dt>
-                [cite_start]<dd>Mensaje generado por el coordinador para advertencias importantes. [cite: 103]</dd>
-                <dt>Dashboard:</dt>
-                [cite_start]<dd>Pantalla principal luego de iniciar sesión. [cite: 103]</dd>
-                <dt>Credenciales:</dt>
-                [cite_start]<dd>Usuario y contraseña para acceder al sistema. [cite: 104]</dd>
-                <dt>Permisos:</dt>
-                [cite_start]<dd>Derechos de acceso asignados a cada usuario. [cite: 104]</dd>
-            </dl>
-        </section>
-
-        <section>
-            <h2>11. [cite_start]Anexos [cite: 105]</h2>
-            [cite_start]<h3>Guía Rápida de Uso [cite: 106]</h3>
-            <ol>
-                <li><strong>1. [cite_start]Iniciar sesión</strong> [cite: 107]
-                    <ul>
-                        [cite_start]<li>Abre el sistema desde el navegador o acceso directo [cite: 108]</li>
-                        [cite_start]<li>Ingresa tu nombre de usuario y contraseña [cite: 109]</li>
-                        [cite_start]<li>Haz clic en "Iniciar sesión" [cite: 110]</li>
-                        [cite_start]<li>Si los datos son correctos, accederás al panel principal del sistema [cite: 111]</li>
-                    </ul>
-                </li>
-                <li><strong>2. [cite_start]Consultar fichas</strong> [cite: 112]
-                    <ul>
-                        [cite_start]<li>Desde el panel principal, entra a “Consultas de Fichas” [cite: 113]</li>
-                        [cite_start]<li>Usa el campo de búsqueda para ingresar número de ficha y programa [cite: 114]</li>
-                        [cite_start]<li>Selecciona el trimestre, competencia y resultado de aprendizaje (R.A) [cite: 115]</li>
-                    </ul>
-                </li>
-                <li><strong>3. [cite_start]Subir acta</strong> [cite: 116]
-                    <ul>
-                        [cite_start]<li>Dentro de una ficha o desde el módulo de “Actas”, selecciona “Subir Acta” [cite: 117]</li>
-                        [cite_start]<li>Haz clic en “Seleccionar archivo” y elige el documento [cite: 118]</li>
-                        [cite_start]<li>Confirma haciendo clic en “Subir” [cite: 119]</li>
-                    </ul>
-                </li>
-                <li><strong>4. [cite_start]Descargar acta</strong> [cite: 120]
-                    <ul>
-                        [cite_start]<li>Ingresa al módulo de “Actas” [cite: 121]</li>
-                        [cite_start]<li>Haz clic en “Descargar” al final de la plantilla para obtener el archivo [cite: 122]</li>
-                    </ul>
-                </li>
-                <li><strong>5. [cite_start]Alertas</strong> [cite: 123]
-                    <ul>
-                        [cite_start]<li>Haz clic en el módulo de “Alertas” [cite: 124]</li>
-                        [cite_start]<li>Genera alertas indicando fechas de inicio y cierre de trimestre [cite: 125]</li>
-                        [cite_start]<li>El sistema envía mensajes automáticos a todos los instructores [cite: 126]</li>
-                    </ul>
-                </li>
-                <li><strong>6. [cite_start]Cerrar sesión</strong> [cite: 127]
-                    <ul>
-                        [cite_start]<li>Haz clic en tu nombre o ícono de usuario [cite: 128]</li>
-                        [cite_start]<li>Selecciona “Cerrar sesión” para salir del sistema de forma segura [cite: 129]</li>
-                    </ul>
-                </li>
-            </ol>
-
-            <div class="note">
-                [cite_start]<h3>✅ Recomendaciones Finales [cite: 130]</h3>
-                <ul>
-                    [cite_start]<li>Verifica tu conexión a internet antes de iniciar sesión [cite: 131]</li>
-                    [cite_start]<li>Usa navegadores actualizados (Chrome, Firefox) [cite: 132]</li>
-                    [cite_start]<li>No compartas tus credenciales con otras personas [cite: 133]</li>
-                    [cite_start]<li>Cierra sesión al finalizar tus actividades [cite: 134]</li>
-                </ul>
-            </div>
-        </section>
+    <div class="authors">
+      <p>Laura Liseth Buitrago Castillo</p>
+      <p>Leslye Marcela Buitrago Mora</p>
+      <p>Samuel Andrés Torres Romero</p>
+      <p>David Santiago Rubiano Hernández</p>
     </div>
+
+    <div class="project-info">
+      <p>Centro de Gestión de Mercados, Logística y Tecnologías de la Información - SENA</p>
+      <p>2826505 – Análisis y Desarrollo de Software</p>
+    </div>
+
+    <div class="version-info">
+      <p>Versión 1 | 21 de mayo de 2025</p>
+    </div>
+
+    <h2>1. Introducción</h2>
+    <p>La gestión educativa en el SENA demanda herramientas eficientes para optimizar procesos y garantizar la calidad de la formación. Un software especializado permitiría centralizar la información sobre fichas de formación, competencias, contenidos y resultados de aprendizaje. Esta solución facilitaría la creación y seguimiento de programas, la evaluación del desempeño de los aprendices y la generación de informes detallados. Además, al automatizar tareas y mejorar la comunicación, se optimizaría el tiempo de los coordinadores y se fortalecería la toma de decisiones basadas en datos.</p>
+
+    <h2>2. Objetivo del Sistema</h2>
+    <p>Desarrollar un software especializado que centralice y optimice la gestión educativa del SENA, facilitando el seguimiento de programas, evaluación de aprendices y toma de decisiones basada en datos.</p>
+
+    <h2>3. Público Objetivo</h2>
+    <ul>
+      <li>Instructores</li>
+      <li>Coordinadores académicos</li>
+      <li>Administradores del sistema</li>
+    </ul>
+
+    <h2>4. Requisitos del Sistema</h2>
+    <ul>
+      <li>Navegador compatible: Google Chrome, Mozilla Firefox</li>
+      <li>Conexión a internet</li>
+      <li>Usuario y contraseña institucional</li>
+    </ul>
+
+    <h2>5. Ingreso al Sistema</h2>
+    <ol>
+      <li>Acceder a: <code>https://actas.institucion.edu</code></li>
+      <li>Ingresar usuario y contraseña</li>
+      <li>Presionar el botón "Iniciar sesión"</li>
+    </ol>
+
+    <h2>6. Módulos y Funcionalidades</h2>
+
+    <h3>6.1. Inicio de Sesión</h3>
+    <p>Permite a los usuarios autenticarse mediante usuario y contraseña.</p>
+    <ul>
+      <li>Ingreso de credenciales</li>
+      <li>Validación del usuario</li>
+      <li>Recuperación de contraseña</li>
+    </ul>
+    <p class="example-screen">Ejemplo de pantalla: [imagen de login]</p>
+
+    <h3>6.2. Filtros y Consultas</h3>
+    <p>Buscar y visualizar fichas por diferentes criterios.</p>
+    <ul>
+      <li>Búsqueda de fichas</li>
+      <li>Visualización de datos asociados</li>
+    </ul>
+    <p class="example-screen">Ejemplo de pantalla: [imagen de búsqueda]</p>
+
+    <h3>6.3. Gestión de Actas (Instructor)</h3>
+    <ul>
+      <li>Cargar acta</li>
+      <li>Entregar para revisión</li>
+      <li>Consultar estado</li>
+    </ul>
+
+    <h3>6.4. Gestión de Actas (Coordinador)</h3>
+    <ul>
+      <li>Actualizar plantillas</li>
+      <li>Visualizar actas subidas</li>
+    </ul>
+
+    <h3>6.5. Módulo de Alertas</h3>
+    <p>Notificaciones para instructores respecto al cierre del trimestre.</p>
+    <ul>
+      <li>Alerta 7 días antes</li>
+      <li>Alerta 3 días antes</li>
+      <li>Alerta el día del cierre</li>
+    </ul>
+
+    <h2>7. Flujo de Trabajo del Sistema</h2>
+
+    <h3>7.1. Inicio de sesión</h3>
+    <ul>
+      <li>Si correcto → acceso</li>
+      <li>Si incorrecto → error</li>
+    </ul>
+
+    <h3>7.2. Dashboard</h3>
+    <ul>
+      <li>Consultar Fichas</li>
+      <li>Gestionar Actas</li>
+      <li>Ver Alertas</li>
+    </ul>
+
+    <h3>7.3. Consultas de Fichas</h3>
+    <p>Buscar por nombre, número u otros criterios.</p>
+
+    <h3>7.4. Gestión de Actas</h3>
+    <ul>
+      <li>Subir PDF</li>
+      <li>Descargar actas</li>
+      <li>Ver historial</li>
+    </ul>
+
+    <h3>7.5. Alertas</h3>
+    <p>Visualización de notificaciones relevantes.</p>
+
+    <h3>7.6. Cierre de sesión</h3>
+    <p>El sistema redirige al login.</p>
+
+    <h2>8. Consideraciones de Seguridad</h2>
+    <ul>
+      <li>No compartir credenciales</li>
+      <li>Cerrar sesión al finalizar</li>
+      <li>Reportar errores al área de soporte</li>
+    </ul>
+
+    <h2>9. Soporte Técnico</h2>
+    <ul>
+      <li>Correo: soporte@institucion.edu</li>
+      <li>Teléfono: (+57) 300 123 4567</li>
+      <li>Horario: Lunes a viernes, 8:00 a.m. - 5:00 p.m.</li>
+    </ul>
+
+    <h2>10. Glosario</h2>
+    <dl>
+      <dt>Acta de cierre</dt>
+      <dd>Documento con notas finales.</dd>
+      <dt>Coordinador</dt>
+      <dd>Valida actas de cierre.</dd>
+      <dt>Ficha</dt>
+      <dd>Registro del grupo de aprendices.</dd>
+      <dt>Alerta</dt>
+      <dd>Mensaje del coordinador al instructor.</dd>
+    </dl>
+
+    <h2>11. Anexos</h2>
+    <h3>Guía Rápida de Uso</h3>
+    <ol>
+      <li>Iniciar sesión</li>
+      <li>Consultar fichas</li>
+      <li>Subir acta</li>
+      <li>Descargar acta</li>
+      <li>Generar alertas</li>
+      <li>Cerrar sesión</li>
+    </ol>
+
+    <div class="note">
+      <h3>✅ Recomendaciones Finales</h3>
+      <ul>
+        <li>Verifica tu conexión</li>
+        <li>Usa navegador actualizado</li>
+        <li>No compartas credenciales</li>
+        <li>Cierra sesión al terminar</li>
+      </ul>
+    </div>
+  </div>
 </body>
 </html>
