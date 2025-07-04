@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaSignOutAlt, FaBook, FaSearch } from "react-icons/fa";
+import { FaSignOutAlt, FaBook, FaSearch, FaArrowLeft } from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import { buscarFichaPrograma } from "../../services/busquedaService";
 import "../../styles/coordinacion/inicio.css";
@@ -66,19 +66,28 @@ const Inicio = () => {
       <header className="header">
         <button className="hamburguesa" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
         {menuOpen && (
-          <div className="menu">
-            <button onClick={() => navigate('/')}><FaSignOutAlt style={{ marginRight: "8px" }} />Cerrar sesión</button>
-            <a
-              href="/manual.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="menu-link"
-              style={{ display: "flex", alignItems: "center", padding: "10px", textDecoration: "none" }}
-            >
-              <FaBook style={{ marginRight: "8px" }} />Manual
-            </a>
-          </div>
-        )}
+                  <div className="menu">
+                    <button onClick={() => navigate('/')}>
+                      <FaSignOutAlt style={{ marginRight: "8px" }} />
+                      Cerrar sesión
+                    </button>
+                    <button>
+                      <a
+                        href="/manual.html"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="menu-link"
+                        style={{ display: "flex", alignItems: "center", padding: "10px", textDecoration: "none", color: "inherit" }}
+                      >
+                        <FaBook style={{ marginRight: "8px" }} />Manual
+                      </a>
+                    </button>
+                    <button onClick={() => navigate('/coordinacion/inicio')}>
+                      <FaArrowLeft style={{ marginRight: "8px" }} />
+                      Volver
+                    </button>
+                  </div>
+                )}
         <div className="logo">
           <img src={logo} alt="Logo ACEF" className="logo-img" />
         </div>

@@ -53,18 +53,25 @@ const Resultados = () => {
         <button className="hamburguesa" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
         {menuOpen && (
           <div className="menu">
-            <button onClick={() => navigate('/')}><FaSignOutAlt style={{ marginRight: "8px" }} />Cerrar sesión</button>
-            <a
-  href="/manual.html"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="menu-link"
-  style={{ display: "flex", alignItems: "center", padding: "10px", textDecoration: "none", color: "inherit" }}
->
-  <FaBook style={{ marginRight: "8px" }} />Manual
-</a>
-
-            <button onClick={() => navigate('/coordinacion/filtro')}><FaArrowLeft style={{ marginRight: "8px" }} />Volver</button>
+            <button onClick={() => navigate('/')}>
+              <FaSignOutAlt style={{ marginRight: "8px" }} />
+              Cerrar sesión
+            </button>
+            <button>
+              <a
+                href="/manual.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="menu-link"
+                style={{ display: "flex", alignItems: "center", padding: "10px", textDecoration: "none", color: "inherit" }}
+              >
+                <FaBook style={{ marginRight: "8px" }} />Manual
+              </a>
+            </button>
+            <button onClick={() => navigate('/coordinacion/inicio')}>
+              <FaArrowLeft style={{ marginRight: "8px" }} />
+              Volver
+            </button>
           </div>
         )}
         <div className="logo">

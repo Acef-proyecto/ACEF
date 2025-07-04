@@ -52,22 +52,31 @@ export default function Acta() {
   return (
     <div className="pantalla">
       <header className="header">
-        <button className="hamburguesa" onClick={() => setMenuOpen(!menuOpen)}>
-          ☰
-        </button>
+        <button className="hamburguesa" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
         {menuOpen && (
           <div className="menu">
             <button onClick={() => navigate('/')}>
-              <FaSignOutAlt /> Cerrar sesión
+              <FaSignOutAlt style={{ marginRight: "8px" }} />
+              Cerrar sesión
             </button>
             <button>
-              <FaBook /> Manual
+              <a
+                href="/manual.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="menu-link"
+                style={{ display: "flex", alignItems: "center", padding: "10px", textDecoration: "none", color: "inherit" }}
+              >
+                <FaBook style={{ marginRight: "8px" }} />Manual
+              </a>
             </button>
             <button onClick={() => navigate('/coordinacion/inicio')}>
-              <FaArrowLeft /> Volver
+              <FaArrowLeft style={{ marginRight: "8px" }} />
+              Volver
             </button>
           </div>
         )}
+        
         <div className="logo">
           <img src={logo} alt="Logo ACEF" className="logo-img" />
         </div>

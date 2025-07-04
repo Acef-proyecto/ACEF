@@ -86,36 +86,29 @@ const Filtros = () => {
   return (
     <div className="pantalla">
       <header className="header">
-        <button
-          className="hamburguesa"
-          aria-label="Abrir menú"
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          ☰
-        </button>
-
+        <button className="hamburguesa" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
         {menuOpen && (
-          <nav className="menu" aria-label="Menú principal">
-            <button type="button" className="menu-button" onClick={() => navigate('/')}>
-              <FaSignOutAlt style={{ marginRight: "8px" }} /> Cerrar sesión
+          <div className="menu">
+            <button onClick={() => navigate('/')}>
+              <FaSignOutAlt style={{ marginRight: "8px" }} />
+              Cerrar sesión
             </button>
-            <button type="button" className="menu-button">
+            <button>
               <a
-  href="/manual.html"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="menu-link"
-  style={{ display: "flex", alignItems: "center", padding: "10px", textDecoration: "none", color: "inherit" }}
->
-  <FaBook style={{ marginRight: "8px" }} />Manual
-</a>
-
+                href="/manual.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="menu-link"
+                style={{ display: "flex", alignItems: "center", padding: "10px", textDecoration: "none", color: "inherit" }}
+              >
+                <FaBook style={{ marginRight: "8px" }} />Manual
+              </a>
             </button>
-            <button type="button" className="menu-button" onClick={() => navigate('/coordinacion/inicio')}>
-              <FaArrowLeft style={{ marginRight: "8px" }} /> Volver
+            <button onClick={() => navigate('/coordinacion/inicio')}>
+              <FaArrowLeft style={{ marginRight: "8px" }} />
+              Volver
             </button>
-          </nav>
+          </div>
         )}
 
         <div className="logo">

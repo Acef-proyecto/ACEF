@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { FaSignOutAlt, FaBook } from "react-icons/fa";
+import { FaSignOutAlt, FaBook, FaArrowLeft} from "react-icons/fa";
 import logo from "../../assets/logo.png";
 import "../../styles/instructor/acta.css";
 import SubirActa from "../../component/Instructor/subir";
@@ -180,21 +180,27 @@ const Acta = () => {
   return (
     <div className="pantalla">
       <header className="header">
-        <button
-          className="hamburguesa"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Abrir menú"
-        >
-          ☰
-        </button>
-
+        <button className="hamburguesa" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
         {menuOpen && (
           <div className="menu">
             <button onClick={() => navigate('/')}>
-              <FaSignOutAlt style={{ marginRight: 8 }} /> Cerrar sesión
+              <FaSignOutAlt style={{ marginRight: "8px" }} />
+              Cerrar sesión
             </button>
             <button>
-              <FaBook style={{ marginRight: 8 }} /> Manual
+              <a
+                href="/manual.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="menu-link"
+                style={{ display: "flex", alignItems: "center", padding: "10px", textDecoration: "none", color: "inherit" }}
+              >
+                <FaBook style={{ marginRight: "8px" }} />Manual
+              </a>
+            </button>
+            <button onClick={() => navigate('/coordinacion/inicio')}>
+              <FaArrowLeft style={{ marginRight: "8px" }} />
+              Volver
             </button>
           </div>
         )}
